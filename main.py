@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 #################################################################################################
 
 # Nombre de villes = taille des individus
-nb_cities = 30
+nb_cities = 10
 
 # Taille de la grille   
 grid_size = 100
@@ -69,10 +69,10 @@ def generateParents(n, cities):
     tabParent = []
     for i in range(n):
         random.shuffle(numbers)
-        listTest = []
+        listCities = []
         for j in numbers : 
-            listTest.append(cities[j])
-        tabParent.append(chemin(str(i), listTest))
+            listCities.append(cities[j])
+        tabParent.append(chemin(str(i), listCities))
     return tabParent
 
 #################################################################################################
@@ -83,21 +83,67 @@ def generateParents(n, cities):
 tabParents = generateParents(nb_parents, cities)
 for i in range(len(tabParents)):
     chemin = tabParents[i].cities
-    print("\nParent " + str(i) + " :" + str(tabParents[i].score))
+    print("\nParent " + str(i) + " Score :" + str(tabParents[i].score))
     # for j in chemin:
     #     print(j.toString())
 
 #? Tracer le chemin des parents sur le graphique
 #TODO : transformer en fonction
 # Pour chaque ligne du tableau de parents
-for i in range(len(tabParents)):
-    colors = ['red','blue','green','purple','pink']
-    #On va tracer le chemin
-    chemin = tabParents[i].cities
-    for j in range((nb_cities-1)):
-        plt.plot([chemin[j].x, chemin[j+1].x], [chemin[j].y, chemin[j+1].y], color = colors[i])
+def tracerChemin(tabParents):
+    for i in range(len(tabParents)):
+        colors = ['red','blue','green','purple','pink']
+        #On va tracer le chemin
+        chemin = tabParents[i].cities
+        for j in range((nb_cities-1)):
+            plt.plot([chemin[j].x, chemin[j+1].x], [chemin[j].y, chemin[j+1].y], color = colors[i])
  
+tracerChemin(tabParents)
 
 plt.ioff()
 plt.show()
 plt.pause(0)
+
+#################################################################################################
+###########################  Génération des enfants  ############################################
+#################################################################################################
+
+#! Une façon de faire parmi tant d'autres : peut-être pas la plus efficace
+# On coupe la séquence parent en 2, puis on remplit le reste de la séquence avec les villes
+# de l'autre parent, qui ne sont pas déjà présentes, dans l'ordre
+def genEnfants(parent1, parent2):
+    half = int(len(parent1.cities)/2)
+    halfP1 = []
+    halfP2 = []
+    #? on garde la première moitié des parents
+    for i in range(half) :
+        halfP1.append(parent1.cities[i])
+        halfP2.append(parent2.cities[i])
+
+    #? on prend chaque élément restant de l'autre parent, s'il n'est pas déjà dans la liste
+    for i in parent2.cities :
+        if (not(i in halfP1)) :
+            halfP1.append(i)
+    tabEnfants[0] = halfP1
+
+    for i in parent1.cities :
+        if (not(i in halfP2)) :
+            halfP2.append(i)
+    tabEnfants[1] = halfP2
+    return tabEnfants
+
+
+genEnfants(tabParents[0], tabParents[1])
+
+#################################################################################################
+###########################  Fonction de sélection  #############################################
+#################################################################################################
+#? On cherche à maximiser le score de nos chemins
+def select(tabEnfants, tabParents) :
+    if (tabEnfants[0].score > tabEnfants[1].score) :
+        e1 = True
+    if (tabParents[0].score > tabParents[1].score) : 
+        p1 = True
+    if (e1 == p1 == True) :
+        return (tabEnfants[0], tabParents[0])
+    elif () 
