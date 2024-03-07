@@ -8,6 +8,7 @@ import random
 ########################  Initialisation des paramètres  ########################################
 #################################################################################################
 
+
 # Nombre de villes = taille des individus
 try:
     nb_cities = int(input("Nombre de villes : "))
@@ -20,7 +21,12 @@ try:
 except ValueError:
     grid_size = 100  # Default value
 
-#
+try:
+    nb_iterations = int(input("Nombre d'itérations : "))
+except ValueError:
+    grid_size = 10  # Default value
+
+# Strictement supérieur à 1 
 nb_parents = 2
 
 # Création de la liste de villes de façon aléatoire
@@ -33,14 +39,23 @@ cities = [city(i, random.randint(0, grid_size), random.randint(0, grid_size))for
 #################################################################################################
 
 def generateParents(n, cities):
-    numbers = list(range(nb_cities))
+    numbers = list(range(1,nb_cities))
     tabParent = []
     for i in range(n):
         random.shuffle(numbers)
-        listCities = []
+        listCities = [cities[0]]
         for j in numbers : 
             listCities.append(cities[j])
+        listCities.append(listCities[0])
         tabParent.append(chemin(str(i), listCities))
+
+    while (tabParent[0] == tabParent[1]):
+        random.shuffle(numbers)
+        for j in numbers : 
+            listCities.append(cities[j])
+        listCities.append(listCities[0])
+        tabParent[1] = (chemin(str(i), listCities))
+
     return tabParent
 
 
@@ -65,14 +80,23 @@ def genEnfants(parent1, parent2):
     for i in parent2.cities :
         if (not(i in halfP1)) :
             halfP1.append(i)
+    halfP1.append(halfP1[0])
     tabEnfants.append(chemin("0",halfP1))
 
     for i in parent1.cities :
         if (not(i in halfP2)) :
             halfP2.append(i)
+    halfP2.append(halfP2[0])
     tabEnfants.append(chemin("1",halfP2))
 
     return tabEnfants
+
+
+#! tenter de faire d'une autre façon : prendre un couple de sommets sur 2
+#! mieux : intervertir un segment entre deux indices au hasard, ex de chemin[2] à chemin[6],
+# à ce moment-là les deux parents garderaient chemin[0] et chemin[1], auraient le segment 2-6 de l'autre,
+# et garderaient leur chemin[>6]
+
 
 #################################################################################################
 ###########################  Fonction de sélection  #############################################
@@ -80,10 +104,11 @@ def genEnfants(parent1, parent2):
 #? On cherche à maximiser le score de nos chemins
 def select(tabEnfants, tabParents):
     scores = []
-    scores.append(tabParents[0].score)
-    scores.append(tabParents[1].score)
-    scores.append(tabEnfants[0].score)
-    scores.append(tabEnfants[1].score)
-
-    scores.sort(reverse=True) # Ordre décroissant
-    return scores[0], scores[1] # On retourne les deux scores maximaux
+    scores.append((tabParents[0].score, tabParents[0]))
+    scores.append((tabParents[1].score, tabParents[1]))
+    scores.append((tabEnfants[0].score, tabEnfants[0]))
+    scores.append((tabEnfants[1].score, tabEnfants[1]))
+    # On classe par ordre décroissant sur le score
+    scores.sort(key=lambda x: x[0], reverse=True) 
+    # On retourne les meilleurs chemins   
+    return [scores[0][1], scores[1][1]] 

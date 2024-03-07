@@ -12,7 +12,6 @@ class chemin(city):
 
 
     #? Attribution du score basé sur la distance, on cherche à maximiser le score
-    #TODO : maximiser le score avec une formule et l'expliquer
     def evaluate(self, cities):
         score = 0
         for i in range(len(cities)-1):
