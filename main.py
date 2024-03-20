@@ -6,7 +6,7 @@ import random
 import matplotlib.pyplot as plt
 
 #! Compteur du nombre de fois où Python m'a rendu fou :
-#! 6
+#! 7
 
 #TODO :
 # Interface graphique :
@@ -25,34 +25,48 @@ import matplotlib.pyplot as plt
 #################################################################################################
 ###########################  Initialisation  ####################################################
 #################################################################################################
-
-
-
-
-#################################################################################################
-###########################  Affichages des villes  #############################################
-#################################################################################################
-
-# Affichage de la liste de villes dans la console
-# for i in cities:
-    # print(i.toString())
-
-# Extraction des attributs des villes
-names = [city.name for city in cities]
-xs = [city.x for city in cities]
-ys = [city.y for city in cities]
-
-# Création d'un graphique
 plt.ion
-plt.scatter(xs, ys, c='red', marker='.')
-# Annotations
-for i, name in enumerate(names):
-    plt.text(xs[i], ys[i], name)
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.title('Carte des villes générées aléatoirement')
-#? Garde le graphique ouvert lors de l'exécution du code
-plt.show(block = False)
+
+
+
+
+#################################################################################################
+###########################  Affichages des graphiques  #############################################
+#################################################################################################
+
+#? Tracer le chemin des parents sur le graphique
+def tracerChemin(tabParents):
+    plt.cla()
+    # Extraction des attributs des villes
+    names = [city.name for city in cities]
+    xs = [city.x for city in cities]
+    ys = [city.y for city in cities]
+
+    # Affichage des villes
+    plt.scatter(xs, ys, c='red', marker='.')
+    # Annotations
+    for i, name in enumerate(names):
+        plt.text(xs[i], ys[i], name)
+    plt.xlabel('X')
+    plt.ylabel('Y')
+    plt.title('Carte des villes générées aléatoirement')
+    
+    # Tracer les chemins entre chaque ville de chaque parent
+    for i in range(len(tabParents)):
+        colors = ['red','blue','green','purple','pink']
+        #On va tracer le chemin
+        cheminDraw = tabParents[i].cities
+        for j in range((nb_cities)):
+            plt.plot([cheminDraw[j].x, cheminDraw[j+1].x], [cheminDraw[j].y, cheminDraw[j+1].y], color = colors[i])
+        
+    #Mettre le score des chemins en légende
+    # plt.legend([tabParents[i].score for i in range(len(tabParents))], 
+    #            title="Scores des chemins (Plus est mieux)", 
+    #            loc="lower left",)
+
+    #? Garde le graphique ouvert lors de l'exécution du code
+    plt.show(block = False)    
+    plt.pause(0.5)
 
 
 
@@ -60,46 +74,18 @@ plt.show(block = False)
 ###########################  Affichage des parents  #############################################
 #################################################################################################
 
-tabParents = generateParents(nb_parents, cities)
-
 #? Test de la génération des parents -> affichage console
 def showParentScore(tabParents):
     for i in range(len(tabParents)):
         cheminParent = tabParents[i].cities
         print("\nParent " + str(i) + " Score :" + str(tabParents[i].score))
-        for j in cheminParent:
-             print(j.toString())
-
-showParentScore(tabParents) # Affichage console
-
-#? Tracer le chemin des parents sur le graphique
-#TODO : transformer en fonction
-# Pour chaque ligne du tableau de parents
-def tracerChemin(tabParents):
-    for i in range(len(tabParents)):
-        colors = ['red','blue','green','purple','pink']
-        #On va tracer le chemin
-        cheminDraw = tabParents[i].cities
-        for j in range((nb_cities)):
-            plt.plot([cheminDraw[j].x, cheminDraw[j+1].x], [cheminDraw[j].y, cheminDraw[j+1].y], color = colors[i])
-        #Mettre le score des chemins en légende
-    # plt.legend([tabParents[i].score for i in range(len(tabParents))], 
-    #            title="Scores des chemins (Plus est mieux)", 
-    #            loc="lower left",)
-    
-tracerChemin(tabParents)
-
-plt.ioff()
-plt.show()
-plt.pause(0)
-
+        # for j in cheminParent:
+        #      print(j.toString())
 
 
 #################################################################################################
 ###########################  Affichage des enfants  #############################################
 #################################################################################################
-
-tabEnfants = genEnfants(tabParents[0], tabParents[1])
 
 # Affichage de tabEnfants pour vérifier le bon fonctionnement de genEnfants
 def showEnfantScore(tabEnfants):
@@ -109,27 +95,26 @@ def showEnfantScore(tabEnfants):
         # for ville in chemin_enfant.cities:
         #     print(ville.toString())
 
-showEnfantScore(tabEnfants) # Affichage console
-
-
-
-newGen = select(tabEnfants, tabParents)
-
-print(newGen[0].score, newGen[1].score)
 
 
 #################################################################################################
 ############################  Itérations  Algo génétique ########################################
 #################################################################################################
-for i in range(3):
+newGen = generateParents(nb_parents, cities)
+tabParents = [0,0]
+for i in range(10):
+    print("\n###############")
     print("Itération " + str(i))
+    print("###############")
     tabParents[0] = newGen[0]
+    tabParents[0].cities = mutate(tabParents[0], 0.5)
     tabParents[1] = newGen[1]
-    showParentScore(tabParents)
-    tabEnfants = genEnfants(tabParents[0], tabParents[1])
+    tabParents[1].cities = mutate(tabParents[1], 0.5)
+
+    tabEnfants = genEnfants2(tabParents[0], tabParents[1])
     showEnfantScore(tabEnfants)
     newGen = select(tabEnfants, tabParents)
-    print(newGen[0].score, newGen[1].score)
+
     tracerChemin(newGen)
 
 

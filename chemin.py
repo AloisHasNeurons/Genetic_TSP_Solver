@@ -17,7 +17,6 @@ class chemin(city):
         for i in range(len(cities)-1):
             for j in range(1, len(cities)-1):
                 score += self.distance(cities[i], cities[j])
-                score = 1/score
         return score
     
     def contains(self, item) : 
