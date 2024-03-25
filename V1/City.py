@@ -1,4 +1,4 @@
-class city:
+class City:
     def __init__(self, name, x, y):
         self.name = str(name)
         self.x = x

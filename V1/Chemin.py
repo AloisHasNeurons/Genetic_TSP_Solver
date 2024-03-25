@@ -1,10 +1,9 @@
-from city import city
 import numpy as np
-class chemin(city):
+class Chemin:
     def __init__(self, name, cities):
         self.name = name
         self.cities = cities
-        self.score = self.evaluate(cities)
+        self.score = self.evaluate()
 
     #? Distance euclidienne entre deux villes
     def distance(self, city1, city2):
@@ -12,15 +11,12 @@ class chemin(city):
 
 
     #? Attribution du score basé sur la distance, on cherche à maximiser le score
-    def evaluate(self, cities):
+    def evaluate(self):
         score = 0
-        for i in range(len(cities)-1):
-            for j in range(1, len(cities)-1):
-                score += self.distance(cities[i], cities[j])
+        for i in range(len(self.cities) - 1):
+            score += self.distance(self.cities[i], self.cities[i+1])
         return score
+
     
     def contains(self, item) : 
-        for i in self.cities :
-            if (item == i) :
-                return True
-        return False
+        return item in self.cities

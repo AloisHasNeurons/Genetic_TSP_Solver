@@ -1,19 +1,19 @@
-from chemin import chemin
-from city import city
+from Chemin import Chemin
+from City import City
 from methodes_genetique import *
 import numpy as np
 import random
 import matplotlib.pyplot as plt
 
 #! Compteur du nombre de fois où Python m'a rendu fou :
-#! 7
+#! 10
 
 #TODO :
 # Interface graphique :
 ### On pourra rentrer le nombre de villes dans l'interface
 ### La grille se calculerait en fonction du nombre de villes
 # Affichage des chemins en temps réél lors du calcul
-# Donner de vrais noms de villes existantes qu'on piocherait dans un tableau par exemple
+# Donner de vrais noms de villes existantes qu'on piocherait dans un tableau par exemple ?
 #! On doit revenir à la ville de départ à la fin
 
 
@@ -92,8 +92,9 @@ def showEnfantScore(tabEnfants):
     for i in range(len(tabEnfants)):
         chemin_enfant = tabEnfants[i]
         print("\nEnfant " + str(i) + " Score :" + str(chemin_enfant.score))
-        # for ville in chemin_enfant.cities:
-        #     print(ville.toString())
+        for ville in chemin_enfant.cities:
+            print(ville.toString())
+        print(len(chemin_enfant.cities))
 
 
 
@@ -111,10 +112,8 @@ for i in range(10):
     tabParents[1] = newGen[1]
     tabParents[1].cities = mutate(tabParents[1], 0.5)
 
-    tabEnfants = genEnfants2(tabParents[0], tabParents[1])
+    tabEnfants = crossoverPMX(tabParents[0], tabParents[1])
     showEnfantScore(tabEnfants)
     newGen = select(tabEnfants, tabParents)
 
     tracerChemin(newGen)
-
-
