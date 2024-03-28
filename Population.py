@@ -1,8 +1,9 @@
 from Route import Route
 import random
 class Population :
-    def __init__(self, city_list, routes) :
+    def __init__(self, routes, city_list) :
         self.routes = routes
+        self.city_list = city_list
 
     def printPopulation(self):
         for route in self.routes:

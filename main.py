@@ -5,7 +5,7 @@ from GeneticAlgorithm import GeneticAlgorithm
 import matplotlib.pyplot as plt
 from matplotlib import image as mpimpg
 import numpy as np
-import random
+
 
 ################################################
 # Binôme : Aloïs VINCENT et Jean REESE
@@ -51,35 +51,19 @@ plt.show()
 #####################################
 #!#### Génération des parents #######
 #####################################
-#? A partir de la liste de villes, créer 10 chemins "parents"
-#? Ordre aléatoire, mais la première ville doit également être la dernière du chemin
+#? A partir de la liste de villes, créer 20 chemins "parents"
 
-def generateParents(nb_parents) :
-    # Initialisation 
-    nb_cities = len(city_list)
-    indexes = list((range(1,nb_cities)))
-    populationParent = [None] * (nb_parents)
+algo = GeneticAlgorithm(mutation_rate = 0.05, population_size = 20, city_list = city_list)
+gen0 = algo.init_population()
+# gen0.printPopulation()
+best2gen0 = Population(city_list=city_list, routes=gen0.selectFittest(2))
+best2gen0.printPopulation()
 
-    for i in range(nb_parents):
-        orderedList = [None] * (nb_cities+1)
-        # On change l'ordre de remplissage
-        random.shuffle(indexes)
-        # Pour remplir un parent aléatoire
-        for j in range(1,nb_cities) :
-            orderedList[j] = city_list[indexes[j-1]]
-        # La première et la dernière ville sont fixées
-        orderedList[0] = city_list[0]
-        orderedList[-1] = city_list[0]
-        newRoute = Route(i, orderedList)
-        # On ajoute ce parent à la population
-        populationParent[i] = newRoute
-    # On renvoie un tableau de n parents néo-formés
-    return populationParent
-
-gen0 = Population(city_list=city_list, routes=generateParents(10))
-gen0.printPopulation()
-best3gen0 = Population(city_list=city_list, routes=gen0.selectFittest(3))
-best3gen0.printPopulation()
 #####################################
 #!########## Croisements ############
 #####################################
+
+#crossOver1et2 = crossOver(populationParent[1], populationParent[2])
+enfant1, enfant2 = algo.crossOver2(best2gen0.routes[0], best2gen0.routes[1])
+print(enfant1.toString())
+print(enfant2.toString())
