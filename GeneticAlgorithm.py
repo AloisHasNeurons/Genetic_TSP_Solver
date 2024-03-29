@@ -4,11 +4,12 @@ import random
 import numpy as np
 class GeneticAlgorithm:
     # Constructeur = Initialisation des paramètres de l'algo
-    def __init__(self, mutation_rate, population_size, city_list):
+    def __init__(self, mutation_rate, population_size, city_list, nb_iterations):
         self.mutation_rate = mutation_rate
         self.population_size = population_size
         self.city_list = city_list
         self.nb_cities = len(city_list)
+        self.nb_iterations = nb_iterations
 
     # Génération de la population initiale : renvoie une population
     def init_population(self):
@@ -35,6 +36,7 @@ class GeneticAlgorithm:
         return Population(city_list = city_list, routes = population)
 
     # Cross Over
+    #! NE FONCTIONNE PAS 
     def crossOver(self, chr1, chr2) :
         #On récupère les villes des deux parents
         crossed1 = chr1.cities
@@ -53,8 +55,8 @@ class GeneticAlgorithm:
             seq1[i] = crossed1[start+i]
             seq2[i] = crossed2[start+i]
         # Convertir les listes en ensembles pour obtenir les valeurs uniques
-        set_seq1 = set(map(tuple, seq1))
-        set_seq2 = set(map(tuple, seq2))
+        set_seq1 = set(seq1)
+        set_seq2 = set(seq2)
         # Trouver les valeurs uniques dans chaque séquence
         unique_seq1 = set_seq1.difference(set_seq2)
         unique_seq2 = set_seq2.difference(set_seq1)
@@ -64,12 +66,12 @@ class GeneticAlgorithm:
         #On remplace les valeurs possiblement redondantes
         compteur = 0
         for i in range(self.nb_cities) :
-            if np.any(np.all(crossed1[i] == rest2, axis=1)) :
+            if np.any(np.all(crossed1[i] == rest2, axis=0)) :
                 crossed1[i] = rest1[compteur]
                 compteur = compteur + 1
         compteur = 0
         for i in range(self.nb_cities) :
-            if np.any(np.all(crossed2[i] == rest1, axis=1)) :
+            if np.any(np.all(crossed2[i] == rest1, axis=0)) :
                 crossed2[i] = rest2[compteur]
                 compteur = compteur + 1
         #On échange les deux portions !
@@ -77,37 +79,28 @@ class GeneticAlgorithm:
             crossed1[start+i] = seq2[i]
             crossed2[start+i] = seq1[i]
         #On retourne les valeurs
-        return [crossed1, crossed2]
-        
+        return Route("Child 1", crossed1), Route("Child 2", crossed2)
 
+    def mutate(self, population):
+        for i in range(len(population.routes)):
+            for j in range(1, self.nb_cities) :
+                if random.random() < self.mutation_rate:
+                    x = random.rand(0, 1)
+                    if x == 0 :
+                        population.routes[j] = self.fullReverse(population=population, position = j)
+                    if x == 1 :
+                        population.routes[j] = self.partReverse(population=population, position = j)
+                    #TODO : Rajouter d'autres types de mutations 
 
-#! Prometteur : mais ne fonctionne pas !! 
-#? C'est trop optimiste, ici Paris n'est plus le point de départ, et le chemin ne se referme pas sur la première ville
-    def crossOver2(self, papa, maman):
-        #Réglage des parametres des cross-overs : le début (inclus) et la fin (exclus)
-        start = random.randint(1,(self.nb_cities-1))
-        end = random.randint(start+1,(self.nb_cities))
+    def fullReverse(self, population, position):
+        cities = population.routes[position].cities
+        rev = [None] * len(cities)
+        for i in range(len(cities)):
+            rev[i] = cities[-(i+1)]
+        return Route(name = population[position].name, cities=rev)
 
-        # On prend tous les éléments de l'un, jusqu'au start, puis tous les éléments de l'autre entre
-        # start et end, et on finit en prenant tous les éléments du premier à partir de la fin 
-        child1_cities = papa.cities[:start] + maman.cities[start:end] + papa.cities[end:]
-        child2_cities = maman.cities[:start] + papa.cities[start:end] + maman.cities[end:]
-
-        child1_cities = self.rmDupCO(child1_cities, start, end)
-        child2_cities = self.rmDupCO(child2_cities, start, end)
-        return Route("Enfant 1", child1_cities), Route("Enfant 2", child2_cities)
-
-
-    def rmDupCO(self, cities, start, end):
-        #? Fonction qui retire les doublons pendant un crossing over
-        unique_cities_order = []
-        explored = set()
-          
-        # On s'assure de conserver l'ordre de la séquence échangée
-        unique_cities_order.extend(cities[start:end])
-        explored.update(cities[start:end])
-        for city in cities[:start] + cities[end:]:
-            if city not in explored:
-                unique_cities_order.append(city)
-                explored.add(city)
-        return unique_cities_order
+    def partReverse(self, population, position) :
+        cities = population.routes[position].cities
+        x = random.randint(1, len(cities)-1)
+        partRev = cities[:x] + cities[x + 2] + cities[x + 1] + cities[x+3:]
+        return Route(partRev)
