@@ -2,16 +2,64 @@ from Population import Population
 from Route import Route
 import random
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import image as mpimpg
 class GeneticAlgorithm:
-    # Constructeur = Initialisation des paramètres de l'algo
+    ######################################
+    #!########## Constructeur ############
+    ######################################       
+    # Initialisation des paramètres de l'algo
     def __init__(self, mutation_rate, population_size, city_list, nb_iterations):
         self.mutation_rate = mutation_rate
         self.population_size = population_size
         self.city_list = city_list
         self.nb_cities = len(city_list)
         self.nb_iterations = nb_iterations
+        self.map_France = mpimpg.imread("map.jpg")
 
-    # Génération de la population initiale : renvoie une population
+        # Extraction des attributs des villes
+        self.names = [city.name for city in city_list]
+        self.x = [city.x for city in city_list]
+        self.y = [city.y for city in city_list]
+
+    #####################################
+    #!###### Traçage des chemins ########
+    #####################################
+    def drawBestRoutes(self, population, nb_routes):
+        # Initialisation des variables
+        x = self.x
+        y = self.y
+        names = self.names
+        colors = ['red','blue','green','purple','pink']
+
+        # On ne peut pas sélectionner plus de routes qu'il n'y en a dans la pop
+        nb_routes = min(nb_routes, len(population.routes))
+        # 5 est notre nombre de routes maximal à afficher
+        nb_routes = min(nb_routes, 5)
+
+        # On efface les routes précédentes
+        plt.cla()
+
+        # On affiche la carte et les villes
+        plt.imshow(self.map_France)
+        plt.scatter(self.x, self.y, c='red', marker='.')
+        for i, name in enumerate(self.names):
+            plt.text(x[i]+5, y[i]+5, name, size = 'xx-small')
+        
+        # On trace les chemins
+        for i in range(nb_routes) : 
+            villes = population.routes[i].cities
+            for j in range(len(villes) - 1):
+                plt.plot([villes[j].x, villes[j+1].x], [villes[j].y, villes[j+1].y], color = colors[i])
+
+        #? Garde le graphique ouvert lors de l'exécution du code
+        plt.show(block = False)    
+        plt.pause(0.5) #Nombre de secondes d'affichage
+
+    ##############################################################
+    #!########## Génération d'une population initiale ############
+    ##############################################################
+    # Renvoie une population 
     def init_population(self):
         #? Ordre aléatoire, mais la première ville doit également être la dernière du chemin
         # Initialisation 
@@ -35,72 +83,104 @@ class GeneticAlgorithm:
         # On renvoie un tableau de n parents néo-formés
         return Population(city_list = city_list, routes = population)
 
-    # Cross Over
-    #! NE FONCTIONNE PAS 
-    def crossOver(self, chr1, chr2) :
-        #On récupère les villes des deux parents
-        crossed1 = chr1.cities
-        crossed2 = chr2.cities
-        #Réglage des parametres des cross-overs : le début (inclus) et la fin (exclus)
-        start = random.randint(1,(self.nb_cities-1))
-        end = random.randint(start+1,(self.nb_cities))
-        size = end-start
-        #Initialisation : rest seront ici les listes des valeurs uniques de chacune des listes
-        seq1 = [None] * (size)
-        seq2 = [None] * (size)
-        rest1 = [None] * (size)
-        rest2 = [None] * (size)
-        #On extrait les séquences à échanger
-        for i in range(size) :
-            seq1[i] = crossed1[start+i]
-            seq2[i] = crossed2[start+i]
-        # Convertir les listes en ensembles pour obtenir les valeurs uniques
-        set_seq1 = set(seq1)
-        set_seq2 = set(seq2)
-        # Trouver les valeurs uniques dans chaque séquence
-        unique_seq1 = set_seq1.difference(set_seq2)
-        unique_seq2 = set_seq2.difference(set_seq1)
-        # Convertir les ensembles de tuples en listes de arrays
-        rest1 = [np.array(item) for item in unique_seq1]
-        rest2 = [np.array(item) for item in unique_seq2]
-        #On remplace les valeurs possiblement redondantes
-        compteur = 0
-        for i in range(self.nb_cities) :
-            if np.any(np.all(crossed1[i] == rest2, axis=0)) :
-                crossed1[i] = rest1[compteur]
-                compteur = compteur + 1
-        compteur = 0
-        for i in range(self.nb_cities) :
-            if np.any(np.all(crossed2[i] == rest1, axis=0)) :
-                crossed2[i] = rest2[compteur]
-                compteur = compteur + 1
-        #On échange les deux portions !
-        for i in range(size) :
-            crossed1[start+i] = seq2[i]
-            crossed2[start+i] = seq1[i]
-        #On retourne les valeurs
-        return Route("Child 1", crossed1), Route("Child 2", crossed2)
+    ###################################
+    #!########## Crossover ############
+    ###################################
+    # Prend 2 parents, et renvoie deux Route enfants, qui correspondent aux parents avec des segments échangés
+    def crossOverDeLaMortQuiTue(self, parent1, parent2):
+        nb_cities = self.nb_cities
+        start, end = sorted(random.sample(range(1, nb_cities), 2))
+        p1, p2 = parent1.cities, parent2.cities # p = parent
 
+        # On définit les segments à échanger :
+        l1, l2 = p1[start:end+1], p2[start:end+1] # l = liste (je sais pas trop pourquoi mais c'était plus intuitif)
+        # On fait des listes contenants les valeurs propres à un seul segment
+        # Pour chaque élément de l1, qui n'est pas dans l2, on le met dans u1, et vice versa pour u2
+        u1, u2 = [e for e in l1 if e not in l2], [e for e in l2 if e not in l1] # u = unique
+
+        # On initialise les enfants, vides
+        c1, c2 = [None] * (nb_cities+1), [None] * (nb_cities+1) # c = child
+        # On copie les segments dans les enfants :
+        c1[start:end+1] = l2 
+        c2[start:end+1] = l1
+
+        # On définit la première et la dernière ville
+        for c in [c1, c2]:
+             c[0] = c[-1] = self.city_list[0]
+
+        # On remplit le reste des villes, sans toucher à la première et dernière ville
+        def fill(c, p, u) :
+            idx = 1
+            for e in p: # Pour chaque élément du parent 
+                if e not in u and e not in c: # Si il n'est pas dans la séquence unique à échanger, et qu'il n'est pas déjà ajouté
+                    while c[idx] is not None and idx < nb_cities : # On parcourt l'enfant pour trouver un None 
+                        idx += 1
+                    c[idx] = e # On ajoute l'élément 
+
+        fill(c1, p1, u2)
+        fill(c2, p2, u1)
+
+        return Route("Child 1", c1), Route("Child 2", c2)
+
+    ###############################################
+    #!########## Fonctions de mutation ############
+    ###############################################
     def mutate(self, population):
         for i in range(len(population.routes)):
             for j in range(1, self.nb_cities) :
                 if random.random() < self.mutation_rate:
-                    x = random.rand(0, 1)
+                    x = random.randint(0, 2)
                     if x == 0 :
                         population.routes[j] = self.fullReverse(population=population, position = j)
-                    if x == 1 :
+                    elif x == 1 :
                         population.routes[j] = self.partReverse(population=population, position = j)
+                    elif x == 2 :
+                        population.routes[j] = self.invertTwo(population=population, position=j)
                     #TODO : Rajouter d'autres types de mutations 
+        return population
 
+    # Mutation qui inverse l'ordre de toutes les villes
     def fullReverse(self, population, position):
         cities = population.routes[position].cities
-        rev = [None] * len(cities)
-        for i in range(len(cities)):
-            rev[i] = cities[-(i+1)]
-        return Route(name = population[position].name, cities=rev)
+        return Route(name = population.routes[position].name, cities=cities[::-1])
 
-    def partReverse(self, population, position) :
+    # Mutation qui inverse l'ordre de certaines villes
+    def partReverse(self, population, position):
         cities = population.routes[position].cities
-        x = random.randint(1, len(cities)-1)
-        partRev = cities[:x] + cities[x + 2] + cities[x + 1] + cities[x+3:]
-        return Route(partRev)
+        x = random.randint(1, len(cities)-2)  
+        cities[x], cities[x + 1] = cities[x + 1], cities[x]  
+        return Route(name=population.routes[position].name, cities=cities)
+
+    # Mutation qui interchange les positions de deux villes
+    def invertTwo(self, population, position) :
+        cities = population.routes[position].cities
+        nb_cities = self.nb_cities
+        pos1 = random.randint(1, nb_cities)
+        pos2 = random.randint(1, nb_cities)
+        while pos1 == pos2 :
+            pos2 = random.randint(1, nb_cities)
+        item1 = cities[pos1]
+        item2 = cities[pos2]
+        newRoute = cities
+        newRoute[pos1] = item2
+        newRoute[pos2] = item1
+        return Route(name=population.routes[position].name, cities=newRoute)
+
+    ####################################
+    #!########## Itérations ############
+    ####################################
+    def iterate(self, pop) :
+        pop_size = self.population_size
+        for i in range(self.nb_iterations) :
+            newPopRoutes = pop.selectFittest(int(pop_size/2)).routes
+            x = random.sample(range(pop_size), int(pop_size/2))
+            y = random.sample(range(pop_size), int(pop_size/2))
+            for j in range(int(pop_size/2)):
+                e1, e2 = self.crossOverDeLaMortQuiTue(pop.routes[x[j]], pop.routes[y[j]])
+                newPopRoutes.append(e1)
+                newPopRoutes.append(e2)
+            newPop = Population(newPopRoutes, city_list=self.city_list)
+            newPop = self.mutate(newPop)
+            pop = newPop.selectFittest(pop_size)
+            Population(pop.routes, self.city_list).selectFittest(2).printPopulation()
+            self.drawBestRoutes(pop,5)

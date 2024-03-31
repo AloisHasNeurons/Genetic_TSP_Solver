@@ -19,4 +19,4 @@ class Population :
         result = [None] * nb
         for i in range(nb):
             result[i] = sortedList[i]
-        return result
+        return Population(result, self.city_list)
