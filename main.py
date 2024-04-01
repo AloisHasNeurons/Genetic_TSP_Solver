@@ -34,6 +34,6 @@ city_list = [City(290,180, "Paris"),
 #####################################
 #? A partir de la liste de villes, créer 20 chemins "parents"
 # Initialisation de l'algorithme et de ses paramètres
-algo = GeneticAlgorithm(mutation_rate = 0.05, population_size = 20, city_list = city_list, nb_iterations = 20)
+algo = GeneticAlgorithm(mutation_rate = 0.05, population_size = 20, city_list = city_list, nb_iterations = 25)
 gen0 = algo.init_population()
 algo.iterate(gen0)
