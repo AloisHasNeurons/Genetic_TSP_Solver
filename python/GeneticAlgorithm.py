@@ -4,6 +4,7 @@ import random
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import image as mpimpg
+import os
 class GeneticAlgorithm:
     ######################################
     #!########## Constructeur ############
@@ -15,7 +16,12 @@ class GeneticAlgorithm:
         self.city_list = city_list
         self.nb_cities = len(city_list)
         self.nb_iterations = nb_iterations
-        self.map_France = mpimpg.imread("data\map.jpg")
+        # Chemin d'accès à l'image, selon l'OS
+        if os.name == "nt" : # Windows
+            path = "data\\map.jpg"
+        else : # Unix
+            path = "data/map.jpg"
+        self.map_France = mpimpg.imread(path)
 
         # Extraction des attributs des villes
         self.names = [city.name for city in city_list]
