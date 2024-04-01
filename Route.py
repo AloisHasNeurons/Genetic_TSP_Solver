@@ -1,4 +1,3 @@
-from City import City
 import numpy as np
 class Route :
     def __init__(self, name, cities):

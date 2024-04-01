@@ -1,5 +1,3 @@
-from Route import Route
-import random
 class Population :
     def __init__(self, routes, city_list) :
         self.routes = routes

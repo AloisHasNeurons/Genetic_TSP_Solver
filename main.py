@@ -1,11 +1,5 @@
 from City import City
-from Population import Population
-from Route import Route
 from GeneticAlgorithm import GeneticAlgorithm
-import matplotlib.pyplot as plt
-from matplotlib import image as mpimpg
-import numpy as np
-
 
 ################################################
 # Binôme : Aloïs VINCENT et Jean REESE
@@ -17,7 +11,7 @@ import numpy as np
 #####################################
 
 #?                    x   y    Nom
-city_list = [City(290,180, "Paris"),
+city_list =    [City(290,180, "Paris"),
                 City(390,420, "Marseille"),
                 City(380,320, "Lyon"),
                 City(250,410, "Toulouse"),

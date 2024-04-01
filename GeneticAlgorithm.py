@@ -15,7 +15,7 @@ class GeneticAlgorithm:
         self.city_list = city_list
         self.nb_cities = len(city_list)
         self.nb_iterations = nb_iterations
-        self.map_France = mpimpg.imread("map.jpg")
+        self.map_France = mpimpg.imread("data\map.jpg")
 
         # Extraction des attributs des villes
         self.names = [city.name for city in city_list]
