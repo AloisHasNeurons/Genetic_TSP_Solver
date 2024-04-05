@@ -60,7 +60,7 @@ class GeneticAlgorithm:
 
         #? Garde le graphique ouvert lors de l'exécution du code
         plt.show(block = False)    
-        plt.pause(0.25) #Nombre de secondes d'affichage
+        plt.pause(0.5) #Nombre de secondes d'affichage
 
     ##############################################################
     #!########## Génération d'une population initiale ############
@@ -125,20 +125,6 @@ class GeneticAlgorithm:
         fill(c1, p1, u2)
         fill(c2, p2, u1)
         
-        # def checkNone(c, p):
-        #     idx = 1
-        #     i = 0
-        #     l = []
-        #     for e in p :
-        #         if e not in c :
-        #             l.append(e)
-        #     for e in c :
-        #         if e is None :
-        #             c[idx] = l[i]
-        #             i += 1
-        #         idx +=1
-        # checkNone(c1, p1)
-        # checkNone(c2, p2)
         return Route("Child 1", c1), Route("Child 2", c2)
 
     ###############################################
@@ -161,15 +147,20 @@ class GeneticAlgorithm:
     # Mutation qui inverse l'ordre de toutes les villes
     def fullReverse(self, population, position):
         cities = population.routes[position].cities
+        # Slicing pour obtenir la liste inversée
         return Route(name = population.routes[position].name, cities=cities[::-1])
 
     # Mutation qui inverse l'ordre de deux villes adjacentes
     def partReverse(self, population, position):
         cities = population.routes[position].cities
+        # Définition de la position de la mutation
         x = random.randint(2, self.nb_cities)
+        #Vérification supplémentaire qu'on ne bouge pas la ville de départ
         while cities[x].name == "Paris" or cities[x-1].name == "Paris" :
             x = random.randint(2, self.nb_cities)  
-        print("Inverted " + cities[x].name + " and " + cities[x-1].name)  
+        # Affichage de la modification
+        print("Inverted " + cities[x].name + " and " + cities[x-1].name)
+        # Déballage de tuple pour échanger les positions  
         cities[x], cities[x - 1] = cities[x - 1], cities[x]
         return Route(name=population.routes[position].name, cities=cities)
 
@@ -177,14 +168,16 @@ class GeneticAlgorithm:
     def moveTwo(self, population, position) :
         cities = population.routes[position].cities
         nb_cities = len(cities) - 1
+        # Définition des positions à échanger mutation
         pos1, pos2 = random.randint(1, nb_cities), random.randint(1, nb_cities)
+        # Vérification supplémentaire qu'on ne bouge pas la ville de départ, et que les positions 1 et 2 sont !=
         while cities[pos1].name == "Paris" :
             pos1 = random.randint(1, nb_cities) 
         while pos1 == pos2 or cities[pos2].name == "Paris" :
             pos2 = random.randint(1, nb_cities)
-
+        # Affichage de la modification
         print("Moved " + cities[pos1].name + " and " + cities[pos2].name)
-        # Échanger deux villes
+        # Déballage de tuple pour échanger les positions  
         cities[pos1], cities[pos2] = cities[pos2], cities[pos1]
         return Route(name=population.routes[position].name, cities=cities)
 
@@ -193,10 +186,13 @@ class GeneticAlgorithm:
     ####################################
     def iterate(self, pop) :
         pop_size = self.population_size
+        # Pour chaque génération : 
         for i in range(self.nb_iterations) :
+            # On sélectionne les 50% meilleures Routes de la population précédente
             newPopRoutes = pop.selectFittest(int(pop_size/2)).routes
-            x = random.sample(range(pop_size), int(pop_size/2))
-            y = random.sample(range(pop_size), int(pop_size/2))
+            # On choisit des positions aléatoires, correspondant aux parents, qu'on met dans deux listes
+            x, y = random.sample(range(pop_size), int(pop_size/2)), random.sample(range(pop_size), int(pop_size/2))
+            # On fait des cross-overs
             for j in range(int(pop_size/2)):
                 e1, e2 = self.crossOverDeLaMortQuiTue(pop.routes[x[j]], pop.routes[y[j]])
                 newPopRoutes.append(e1)
@@ -208,4 +204,4 @@ class GeneticAlgorithm:
             pop = newPop.selectFittest(pop_size)
             # Afficher les 2 meilleures nouvelles routes
             Population(pop.routes, self.city_list).selectFittest(2).printPopulation()
-            self.drawBestRoutes(pop,5)
+            self.drawBestRoutes(pop,1)

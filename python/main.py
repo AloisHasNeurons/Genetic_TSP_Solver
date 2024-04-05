@@ -31,3 +31,5 @@ city_list =    [City(290,180, "Paris"),
 algo = GeneticAlgorithm(mutation_rate = 0.05, population_size = 20, city_list = city_list, nb_iterations = 25)
 gen0 = algo.init_population()
 algo.iterate(gen0)
+
+#TODO : interface graphique, pourquoi pas : affichage de graphiques (en R ?) pour les statistiques sur les scores de chaque itération
