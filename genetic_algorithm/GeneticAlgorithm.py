@@ -3,6 +3,7 @@ from Route import Route
 import random
 import numpy as np
 import matplotlib.pyplot as plt
+import geopandas as gpd
 from matplotlib import image as mpimpg
 import os
 class GeneticAlgorithm:
@@ -10,18 +11,24 @@ class GeneticAlgorithm:
     #!########## Constructeur ############
     ######################################       
     # Initialisation des paramètres de l'algo
-    def __init__(self, mutation_rate, population_size, city_list, nb_iterations):
+    def __init__(self, mutation_rate, population_size, city_list, nb_iterations, country, data_city):
         self.mutation_rate = mutation_rate
         self.population_size = population_size
         self.city_list = city_list
         self.nb_cities = len(city_list)
         self.nb_iterations = nb_iterations
-        # Chemin d'accès à l'image, selon l'OS
+        self.country = country
+        self.data_city = data_city
+        self.gdf = gpd.GeoDataFrame(data_city, geometry="Coordinates")
+        self.fig, self.gax = plt.subplots(figsize=(10,10))
+
+        # This should be the path to the downloaded countries shapefile.
         if os.name == "nt" : # Windows
-            path = "data\\map.jpg"
+            shapefile_path = "data\\ne_10m_admin_0_map_units\\ne_10m_admin_0_map_units.shp"
         else : # Unix
-            path = "data/map.jpg"
-        self.map_France = mpimpg.imread(path)
+            shapefile_path = "data/ne_10m_admin_0_map_units/ne_10m_admin_0_map_units.shp"
+        # Load the shapefile
+        self.countries_gdf = gpd.read_file(shapefile_path)
 
         # Extraction des attributs des villes
         self.names = [city.name for city in city_list]
@@ -32,26 +39,40 @@ class GeneticAlgorithm:
     #!###### Traçage des chemins ########
     #####################################
     def drawBestRoutes(self, population, nb_routes):
-        # Initialisation des variables
-        x = self.x
-        y = self.y
-        names = self.names
+        # On efface les routes précédentes        
+        self.gax.cla()
+
+        data_city = self.data_city
+        countries_gdf = self.countries_gdf
+
+        # Sélection des données correspondantes au pays
+        country_subset = countries_gdf[countries_gdf['NAME'] == self.country]
+
+        # Plot the country
+        country_subset.plot(ax=self.gax, edgecolor='black',color='white')
+        # Plot the cities
+        self.gdf.plot(ax=self.gax, color='red', alpha = 0.5)
+
+
+        self.gax.set_xlabel('longitude')
+        self.gax.set_ylabel('latitude')
+
+        # Kill the spines
+        self.gax.spines['top'].set_visible(False)
+        self.gax.spines['right'].set_visible(False)
+
+        # Label the cities
+        # for x, y, label in zip(gdf['Coordinates'].x, gdf['Coordinates'].y, gdf['City']):
+        #     gax.annotate(label, xy=(x,y), xytext=(4,4), textcoords='offset points')
+
         colors = ['pink','purple','green','blue','red']
 
-        # On ne peut pas sélectionner plus de routes qu'il n'y en a dans la pop
+        # Initialisation du nombre de routes à afficher 
+        # On ne peut pas sélectionner plus de routes qu'il n'y en a dans la population
         nb_routes = min(nb_routes, len(population.routes))
         # 5 est notre nombre de routes maximal à afficher
         nb_routes = min(nb_routes, 5)
 
-        # On efface les routes précédentes
-        plt.cla()
-
-        # On affiche la carte et les villes
-        plt.imshow(self.map_France)
-        plt.scatter(self.x, self.y, c='red', marker='.')
-        for i, name in enumerate(self.names):
-            plt.text(x[i]+5, y[i]+5, name, size = 'xx-small')
-        
         # On trace les chemins
         for i in range(nb_routes) : 
             villes = population.routes[i].cities
@@ -59,7 +80,7 @@ class GeneticAlgorithm:
                 plt.plot([villes[j].x, villes[j+1].x], [villes[j].y, villes[j+1].y], color = colors[i])
 
         #? Garde le graphique ouvert lors de l'exécution du code
-        plt.show(block = False)    
+        self.fig.canvas.draw()
         plt.pause(0.5) #Nombre de secondes d'affichage
 
     ##############################################################
@@ -198,10 +219,11 @@ class GeneticAlgorithm:
                 newPopRoutes.append(e1)
                 newPopRoutes.append(e2)
             newPop = Population(newPopRoutes, city_list=self.city_list)
+            #! ATTENTION : pb d'index quand city_list est grande ? 
             print("-------------------------------------------\nItération n°" + str(i) +"\n\nMutations :\n")
             newPop = self.mutate(newPop)
             print("\n############################################\n\n2 Meilleurs enfants :\n")
             pop = newPop.selectFittest(pop_size)
             # Afficher les 2 meilleures nouvelles routes
             Population(pop.routes, self.city_list).selectFittest(2).printPopulation()
-            self.drawBestRoutes(pop,1)
+            self.drawBestRoutes(pop,2)
