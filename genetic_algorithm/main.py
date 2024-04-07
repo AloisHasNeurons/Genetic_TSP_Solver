@@ -22,59 +22,58 @@ if os.name == "nt" : # Windows
 else : # Unix
     path = "data/worldcities.csv"
 
-data_city = pd.read_csv(path)
+#! Sélection du pays
+country = "Italy"
 
+data_city = pd.read_csv(path)
+data_city = data_city[data_city['Country'] == country]
 # Ajout d'une colonne coordonnées, tuples de longitude, latitude
 data_city["Coordinates"] = list(zip(data_city.Longitude, data_city.Latitude))
 # Conversion de la colonne en Point(longitude, latitude)
 data_city["Coordinates"] = data_city["Coordinates"].apply(Point)
 # Conversion en GeoDataFrame, pour tracer sur une carte
 gdf = gpd.GeoDataFrame(data_city, geometry="Coordinates")
-
+print(gdf.head())
 
 # This should be the path to the downloaded countries shapefile.
-shapefile_path = 'data/ne_110m_admin_0_countries/ne_110m_admin_0_countries.shp'
+if os.name == "nt" : # Windows
+    shapefile_path = "data\\ne_10m_admin_0_map_units\\ne_10m_admin_0_map_units.shp"
+else : # Unix
+    shapefile_path = "data/ne_10m_admin_0_map_units/ne_10m_admin_0_map_units.shp"
+
 
 # Load the shapefile
 countries_gdf = gpd.read_file(shapefile_path)
 
-# Déterminer le CRS UTM approprié pour la France métropolitaine
-# Note : Le CRS UTM pour la France métropolitaine est généralement la zone 31N
-utm_crs = 'EPSG:32631'
-
-# Reprojection en système de coordonnées projeté pour des calculs précis
-countries_gdf_projected = countries_gdf.to_crs(utm_crs)
-
-# Filtrer pour obtenir la France métropolitaine en utilisant les coordonnées projetées
-france_mainland = countries_gdf_projected[
-    (countries_gdf_projected['NAME'] == 'France') & 
-    (countries_gdf_projected.geometry.centroid.x >= -5e5) &  # X coord in meters in UTM
-    (countries_gdf_projected.geometry.centroid.x <= 1e6) &   # X coord in meters in UTM
-    (countries_gdf_projected.geometry.centroid.y >= 4.5e6) &  # Y coord in meters in UTM
-    (countries_gdf_projected.geometry.centroid.y <= 5.5e6)    # Y coord in meters in UTM
-]
-
-# Re-project to original CRS to display on a geographic map
-france_mainland = france_mainland.to_crs(countries_gdf.crs)
-
-# Vérifiez à nouveau si le GeoDataFrame est vide
-if not france_mainland.empty:
-    # Créez une figure et un axe pour le tracé
-    fig, ax = plt.subplots(figsize=(10, 10))
-
-    # Tracé de la France métropolitaine après le filtrage
-    france_mainland.plot(ax=ax, color='lightblue', edgecolor='black')
-
-    # Personnalisation du graphique
-    ax.set_title('Carte de la France métropolitaine')
-    ax.set_axis_off()  # Désactiver les axes pour une carte épurée
-
-    # Afficher le graphique
-    plt.show()
-else:
-    print('Le GeoDataFrame de la France métropolitaine est vide.')
+# Sélection des données correspondantes au pays
+country_subset = countries_gdf[countries_gdf['NAME'] == country]
 
 
+fig, gax = plt.subplots(figsize=(10,10))
+
+
+# Plot the country
+country_subset.plot(ax=gax, edgecolor='black',color='white')
+# Plot the cities
+gdf.plot(ax=gax, color='red', alpha = 0.5)
+
+
+gax.set_xlabel('longitude')
+gax.set_ylabel('latitude')
+
+# Kill the spines
+gax.spines['top'].set_visible(False)
+gax.spines['right'].set_visible(False)
+
+# Label the cities
+# for x, y, label in zip(gdf['Coordinates'].x, gdf['Coordinates'].y, gdf['City']):
+#     gax.annotate(label, xy=(x,y), xytext=(4,4), textcoords='offset points')
+
+plt.show()
+
+
+#TODO : Remplacer city_list par les données de data_city
+#TODO : Changer le calcul de distance dans l'algo, pour calculer à partir de la longitude/latitude
 #?                    x   y    Nom
 city_list =    [City(290,180, "Paris"),
                 City(390,420, "Marseille"),
