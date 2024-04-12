@@ -136,7 +136,7 @@ class GeneticAlgorithm:
              c[0] = c[-1] = self.city_list[0]
 
         # On remplit le reste des villes, sans toucher à la première et dernière ville
-        #! TODO : Ne marche pas une fois par siècle, probablement vérifier les None en premier
+        #! TODO : Ne marche pas de temps en temps, probablement vérifier les None en premier
         def fill(c, p, u) :
             idx = 1
             for e in p: # Pour chaque élément du parent 
@@ -147,6 +147,17 @@ class GeneticAlgorithm:
         fill(c1, p1, u2)
         fill(c2, p2, u1)
         
+        if None in c1 or None in c2 :
+        # Remplir les None restants dans c1 et c2
+            for c in [c1, c2]:
+                for i in range(len(c)):
+                    if c[i] is None:
+                        # Trouver un élément qui n'est pas encore dans c
+                        for e in self.city_list:
+                            if e not in c:
+                                c[i] = e
+                                break
+
         return Route("Child 1", c1), Route("Child 2", c2)
 
     ###############################################

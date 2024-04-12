@@ -23,7 +23,7 @@ else : # Unix
     path = "data/worldcities.csv"
 
 #! Sélection du pays
-country = "France"
+country = "Czechia"
 
 data_city = pd.read_csv(path)
 data_city = data_city[data_city['Country'] == country]
