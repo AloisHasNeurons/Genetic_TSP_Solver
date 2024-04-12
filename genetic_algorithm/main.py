@@ -1,12 +1,12 @@
 from City import City
 from GeneticAlgorithm import GeneticAlgorithm
+import os
+import numpy as np
+import pandas as pd
 # Pour l'affichage des cartes :
 from shapely.geometry import Point
-import pandas as pd
 import geopandas as gpd
-import os
 import matplotlib.pyplot as plt
-import numpy as np
 
 ################################################
 # Binôme : Aloïs VINCENT et Jean REESE
@@ -23,7 +23,7 @@ else : # Unix
     path = "data/worldcities.csv"
 
 #! Sélection du pays
-country = "Italy"
+country = "France"
 
 data_city = pd.read_csv(path)
 data_city = data_city[data_city['Country'] == country]
@@ -33,7 +33,7 @@ data_city["Coordinates"] = list(zip(data_city.Longitude, data_city.Latitude))
 data_city["Coordinates"] = data_city["Coordinates"].apply(Point)
 # Conversion en GeoDataFrame, pour tracer sur une carte
 
-nb_cities = 20
+nb_cities = 22
 data_city = data_city.head(nb_cities)
 
 
@@ -44,8 +44,14 @@ city_list = data_city.apply(lambda row: City(row['Longitude'], row['Latitude'], 
 #####################################
 #? A partir de la liste de villes, créer 20 chemins "parents"
 # Initialisation de l'algorithme et de ses paramètres
-algo = GeneticAlgorithm(mutation_rate = 0.05, population_size = 50, city_list = city_list, nb_iterations = 25, country = country, data_city = data_city)
-gen0 = algo.init_population()
-algo.iterate(gen0)
+algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
+nb_iterations = 100
+for i in range(nb_iterations):
+    algo.run()
+    fig, gax = algo.drawBestRoutes(algo.pop, 1)
+    #? Garde le graphique ouvert lors de l'exécution du code
+    fig.canvas.draw()
+    plt.pause(0.05) #Nombre de secondes d'affichage
 
 #TODO : interface graphique, pourquoi pas : affichage de graphiques (en R ?) pour les statistiques sur les scores de chaque itération
+#TODO : barre de progression dans l'interface graphique 

@@ -11,16 +11,16 @@ class GeneticAlgorithm:
     #!########## Constructeur ############
     ######################################       
     # Initialisation des paramètres de l'algo
-    def __init__(self, mutation_rate, population_size, city_list, nb_iterations, country, data_city):
+    def __init__(self, mutation_rate, population_size, city_list, country, data_city):
         self.mutation_rate = mutation_rate
         self.population_size = population_size
         self.city_list = city_list
         self.nb_cities = len(city_list)
-        self.nb_iterations = nb_iterations
         self.country = country
         self.data_city = data_city
         self.gdf = gpd.GeoDataFrame(data_city, geometry="Coordinates")
         self.fig, self.gax = plt.subplots(figsize=(10,10))
+        self.pop = self.init_population()
 
         # This should be the path to the downloaded countries shapefile.
         if os.name == "nt" : # Windows
@@ -62,10 +62,10 @@ class GeneticAlgorithm:
         self.gax.spines['right'].set_visible(False)
 
         # Label the cities
-        # for x, y, label in zip(gdf['Coordinates'].x, gdf['Coordinates'].y, gdf['City']):
-        #     gax.annotate(label, xy=(x,y), xytext=(4,4), textcoords='offset points')
-
-        colors = ['pink','purple','green','blue','red']
+        for x, y, label in zip(self.x, self.y, self.names):
+            self.gax.annotate(label, xy=(x,y), xytext=(4,4), textcoords='offset points')
+        
+        colors = ['red','purple','green','blue','pink']
 
         # Initialisation du nombre de routes à afficher 
         # On ne peut pas sélectionner plus de routes qu'il n'y en a dans la population
@@ -80,9 +80,9 @@ class GeneticAlgorithm:
                 plt.plot([villes[j].x, villes[j+1].x], [villes[j].y, villes[j+1].y], color = colors[i])
 
         #? Garde le graphique ouvert lors de l'exécution du code
-        self.fig.canvas.draw()
-        plt.pause(0.5) #Nombre de secondes d'affichage
-
+        # self.fig.canvas.draw()
+        # plt.pause(0.05) #Nombre de secondes d'affichage
+        return self.fig, self.gax
     ##############################################################
     #!########## Génération d'une population initiale ############
     ##############################################################
@@ -136,6 +136,7 @@ class GeneticAlgorithm:
              c[0] = c[-1] = self.city_list[0]
 
         # On remplit le reste des villes, sans toucher à la première et dernière ville
+        #! TODO : Ne marche pas une fois par siècle, probablement vérifier les None en premier
         def fill(c, p, u) :
             idx = 1
             for e in p: # Pour chaque élément du parent 
@@ -180,7 +181,7 @@ class GeneticAlgorithm:
         while cities[x].name == "Paris" or cities[x-1].name == "Paris" :
             x = random.randint(2, self.nb_cities)  
         # Affichage de la modification
-        print("Inverted " + cities[x].name + " and " + cities[x-1].name)
+        #print("Inverted " + cities[x].name + " and " + cities[x-1].name)
         # Déballage de tuple pour échanger les positions  
         cities[x], cities[x - 1] = cities[x - 1], cities[x]
         return Route(name=population.routes[position].name, cities=cities)
@@ -197,7 +198,7 @@ class GeneticAlgorithm:
         while pos1 == pos2 or cities[pos2].name == "Paris" :
             pos2 = random.randint(1, nb_cities)
         # Affichage de la modification
-        print("Moved " + cities[pos1].name + " and " + cities[pos2].name)
+        #print("Moved " + cities[pos1].name + " and " + cities[pos2].name)
         # Déballage de tuple pour échanger les positions  
         cities[pos1], cities[pos2] = cities[pos2], cities[pos1]
         return Route(name=population.routes[position].name, cities=cities)
@@ -205,25 +206,23 @@ class GeneticAlgorithm:
     ####################################
     #!########## Itérations ############
     ####################################
-    def iterate(self, pop) :
+    # Produit une itération de l'algo
+    def run(self) :
+        previous_pop = self.pop
         pop_size = self.population_size
-        # Pour chaque génération : 
-        for i in range(self.nb_iterations) :
-            # On sélectionne les 50% meilleures Routes de la population précédente
-            newPopRoutes = pop.selectFittest(int(pop_size/2)).routes
-            # On choisit des positions aléatoires, correspondant aux parents, qu'on met dans deux listes
-            x, y = random.sample(range(pop_size), int(pop_size/2)), random.sample(range(pop_size), int(pop_size/2))
-            # On fait des cross-overs
-            for j in range(int(pop_size/2)):
-                e1, e2 = self.crossOverDeLaMortQuiTue(pop.routes[x[j]], pop.routes[y[j]])
-                newPopRoutes.append(e1)
-                newPopRoutes.append(e2)
-            newPop = Population(newPopRoutes, city_list=self.city_list)
-            #! ATTENTION : pb d'index quand city_list est grande ? 
-            print("-------------------------------------------\nItération n°" + str(i) +"\n\nMutations :\n")
-            newPop = self.mutate(newPop)
-            print("\n############################################\n\n2 Meilleurs enfants :\n")
-            pop = newPop.selectFittest(pop_size)
-            # Afficher les 2 meilleures nouvelles routes
-            Population(pop.routes, self.city_list).selectFittest(2).printPopulation()
-            self.drawBestRoutes(pop,2)
+        # On sélectionne les 50% meilleures Routes de la population précédente
+        newPopRoutes = previous_pop.selectFittest(int(pop_size/2)).routes
+        # On choisit des positions aléatoires, correspondant aux parents, qu'on met dans deux listes
+        x, y = random.sample(range(pop_size), int(pop_size/2)), random.sample(range(pop_size), int(pop_size/2))
+        # On fait des cross-overs
+        for j in range(int(pop_size/2)):
+            e1, e2 = self.crossOverDeLaMortQuiTue(previous_pop.routes[x[j]], previous_pop.routes[y[j]])
+            newPopRoutes.append(e1)
+            newPopRoutes.append(e2)
+        newPop = Population(newPopRoutes, city_list=self.city_list)
+        #! ATTENTION : pb d'index quand city_list est grande ? 
+        newPop = self.mutate(newPop)
+        pop = newPop.selectFittest(pop_size)
+        self.pop = pop
+        # Afficher les 2 meilleures nouvelles routes
+        #Population(pop.routes, self.city_list).selectFittest(1).printPopulation()
