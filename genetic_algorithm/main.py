@@ -23,7 +23,7 @@ else : # Unix
     path = "data/worldcities.csv"
 
 #! Sélection du pays
-country = "Czechia"
+country = "Finland"
 
 data_city = pd.read_csv(path)
 data_city = data_city[data_city['Country'] == country]
@@ -33,9 +33,8 @@ data_city["Coordinates"] = list(zip(data_city.Longitude, data_city.Latitude))
 data_city["Coordinates"] = data_city["Coordinates"].apply(Point)
 # Conversion en GeoDataFrame, pour tracer sur une carte
 
-nb_cities = 22
+nb_cities = 18
 data_city = data_city.head(nb_cities)
-
 
 city_list = data_city.apply(lambda row: City(row['Longitude'], row['Latitude'], row['City']), axis=1).tolist()
 
@@ -51,7 +50,13 @@ for i in range(nb_iterations):
     fig, gax = algo.drawBestRoutes(algo.pop, 1)
     #? Garde le graphique ouvert lors de l'exécution du code
     fig.canvas.draw()
-    plt.pause(0.05) #Nombre de secondes d'affichage
-
+    # Affichage toutes les 5 itérations
+    if (i%5 == 0):
+        print("Itération " + str(i))
+    plt.pause(0.0001) #Nombre de secondes d'affichage
+# Affichage à la fin de l'exécution
+print("Done!")
+algo.pop.selectFittest(1).printPopulation()
+plt.show()
 #TODO : interface graphique, pourquoi pas : affichage de graphiques (en R ?) pour les statistiques sur les scores de chaque itération
 #TODO : barre de progression dans l'interface graphique 

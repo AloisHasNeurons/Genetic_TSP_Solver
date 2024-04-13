@@ -32,8 +32,8 @@ class GeneticAlgorithm:
 
         # Extraction des attributs des villes
         self.names = [city.name for city in city_list]
-        self.x = [city.x for city in city_list]
-        self.y = [city.y for city in city_list]
+        self.longitude = [city.longitude for city in city_list]
+        self.latitude = [city.latitude for city in city_list]
 
     #####################################
     #!###### Traçage des chemins ########
@@ -51,7 +51,7 @@ class GeneticAlgorithm:
         # Plot the country
         country_subset.plot(ax=self.gax, edgecolor='black',color='white')
         # Plot the cities
-        self.gdf.plot(ax=self.gax, color='red', alpha = 0.5)
+        self.gdf.plot(ax=self.gax, color='red', alpha = 0.5, aspect = None)
 
 
         self.gax.set_xlabel('longitude')
@@ -62,8 +62,8 @@ class GeneticAlgorithm:
         self.gax.spines['right'].set_visible(False)
 
         # Label the cities
-        for x, y, label in zip(self.x, self.y, self.names):
-            self.gax.annotate(label, xy=(x,y), xytext=(4,4), textcoords='offset points')
+        for longitude, latitude, label in zip(self.longitude, self.latitude, self.names):
+            self.gax.annotate(label, xy=(longitude,latitude), xytext=(4,4), textcoords='offset points')
         
         colors = ['red','purple','green','blue','pink']
 
@@ -77,7 +77,7 @@ class GeneticAlgorithm:
         for i in range(nb_routes) : 
             villes = population.routes[i].cities
             for j in range(len(villes) - 1):
-                plt.plot([villes[j].x, villes[j+1].x], [villes[j].y, villes[j+1].y], color = colors[i])
+                plt.plot([villes[j].longitude, villes[j+1].longitude], [villes[j].latitude, villes[j+1].latitude], color = colors[i])
 
         #? Garde le graphique ouvert lors de l'exécution du code
         # self.fig.canvas.draw()
@@ -136,7 +136,6 @@ class GeneticAlgorithm:
              c[0] = c[-1] = self.city_list[0]
 
         # On remplit le reste des villes, sans toucher à la première et dernière ville
-        #! TODO : Ne marche pas de temps en temps, probablement vérifier les None en premier
         def fill(c, p, u) :
             idx = 1
             for e in p: # Pour chaque élément du parent 
@@ -191,8 +190,6 @@ class GeneticAlgorithm:
         #Vérification supplémentaire qu'on ne bouge pas la ville de départ
         while cities[x].name == "Paris" or cities[x-1].name == "Paris" :
             x = random.randint(2, self.nb_cities)  
-        # Affichage de la modification
-        #print("Inverted " + cities[x].name + " and " + cities[x-1].name)
         # Déballage de tuple pour échanger les positions  
         cities[x], cities[x - 1] = cities[x - 1], cities[x]
         return Route(name=population.routes[position].name, cities=cities)
@@ -208,8 +205,6 @@ class GeneticAlgorithm:
             pos1 = random.randint(1, nb_cities) 
         while pos1 == pos2 or cities[pos2].name == "Paris" :
             pos2 = random.randint(1, nb_cities)
-        # Affichage de la modification
-        #print("Moved " + cities[pos1].name + " and " + cities[pos2].name)
         # Déballage de tuple pour échanger les positions  
         cities[pos1], cities[pos2] = cities[pos2], cities[pos1]
         return Route(name=population.routes[position].name, cities=cities)
@@ -230,10 +225,9 @@ class GeneticAlgorithm:
             e1, e2 = self.crossOverDeLaMortQuiTue(previous_pop.routes[x[j]], previous_pop.routes[y[j]])
             newPopRoutes.append(e1)
             newPopRoutes.append(e2)
+        # On fait des mutations sur le résultat de nos cross-overs
         newPop = Population(newPopRoutes, city_list=self.city_list)
-        #! ATTENTION : pb d'index quand city_list est grande ? 
         newPop = self.mutate(newPop)
+        # On sélectionne les meilleurs individus pour constituer notre nouvelle population
         pop = newPop.selectFittest(pop_size)
         self.pop = pop
-        # Afficher les 2 meilleures nouvelles routes
-        #Population(pop.routes, self.city_list).selectFittest(1).printPopulation()

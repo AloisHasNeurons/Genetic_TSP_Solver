@@ -1,10 +1,10 @@
 class City :
-    def __init__(self, x, y, name):
-        self.x = x
-        self.y = y
+    def __init__(self, longitude, latitude, name):
+        self.longitude = longitude
+        self.latitude = latitude
         self.name = str(name)
 
     def toString(self):
-        return ("x : "+ str(self.x) + " | y : " + str(self.y) + " | Name : " + str(self.name) + "\n")
+        return ("Longitude : "+ str(self.longitude) + " | Latitude : " + str(self.latitude) + " | Name : " + str(self.name) + "\n")
 
     
