@@ -21,6 +21,7 @@ nb_iterations = 100
 root = ctk.CTk()
 root.title("Algo génétique")
 root.geometry("1200x800")
+root.protocol("WM_DELETE_WINDOW", root.quit)
 
 # Initialisation des sections
 mapFrame = ctk.CTkFrame(master = root, fg_color= "red")
