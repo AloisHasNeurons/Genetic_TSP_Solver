@@ -19,8 +19,8 @@ class GeneticAlgorithm:
         self.country = country
         self.data_city = data_city
         self.gdf = gpd.GeoDataFrame(data_city, geometry="Coordinates")
-        self.fig, self.gax = plt.subplots(figsize=(10,10))
         self.pop = self.init_population()
+        self.previous_best = None
 
         # This should be the path to the downloaded countries shapefile.
         if os.name == "nt" : # Windows
@@ -38,9 +38,9 @@ class GeneticAlgorithm:
     #####################################
     #!###### Traçage des chemins ########
     #####################################
-    def drawBestRoutes(self, population, nb_routes):
+    def drawBestRoutes(self, population, nb_routes, gax):
         # On efface les routes précédentes        
-        self.gax.cla()
+        gax.cla()
 
         data_city = self.data_city
         countries_gdf = self.countries_gdf
@@ -49,21 +49,21 @@ class GeneticAlgorithm:
         country_subset = countries_gdf[countries_gdf['NAME'] == self.country]
 
         # Plot the country
-        country_subset.plot(ax=self.gax, edgecolor='black',color='white')
+        country_subset.plot(ax=gax, edgecolor='black',color='white')
         # Plot the cities
-        self.gdf.plot(ax=self.gax, color='red', alpha = 0.5, aspect = None)
+        self.gdf.plot(ax=gax, color='red', alpha = 0.5, aspect = None)
 
 
-        self.gax.set_xlabel('longitude')
-        self.gax.set_ylabel('latitude')
+        gax.set_xlabel('longitude')
+        gax.set_ylabel('latitude')
 
         # Kill the spines
-        self.gax.spines['top'].set_visible(False)
-        self.gax.spines['right'].set_visible(False)
+        gax.spines['top'].set_visible(False)
+        gax.spines['right'].set_visible(False)
 
         # Label the cities
         for longitude, latitude, label in zip(self.longitude, self.latitude, self.names):
-            self.gax.annotate(label, xy=(longitude,latitude), xytext=(4,4), textcoords='offset points')
+            gax.annotate(label, xy=(longitude,latitude), xytext=(4,4), textcoords='offset points')
         
         colors = ['red','purple','green','blue','pink']
 
@@ -82,7 +82,7 @@ class GeneticAlgorithm:
         #? Garde le graphique ouvert lors de l'exécution du code
         # self.fig.canvas.draw()
         # plt.pause(0.05) #Nombre de secondes d'affichage
-        return self.fig, self.gax
+        return gax
     ##############################################################
     #!########## Génération d'une population initiale ############
     ##############################################################
@@ -215,6 +215,7 @@ class GeneticAlgorithm:
     # Produit une itération de l'algo
     def run(self) :
         previous_pop = self.pop
+        self.previous_best = previous_pop.selectFittest(1)
         pop_size = self.population_size
         # On sélectionne les 50% meilleures Routes de la population précédente
         newPopRoutes = previous_pop.selectFittest(int(pop_size/2)).routes
