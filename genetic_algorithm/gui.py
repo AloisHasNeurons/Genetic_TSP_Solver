@@ -70,17 +70,7 @@ start_btn = ctk.CTkButton(master = parametersFrame, text="Start", font=("Arial",
                            country = "France", 
                            root = root,
                            nb_cities = 15,
-                           pause = 0.01))
+                           pause = 0.02))
 start_btn.grid(row=7, column=1,columnspan = 2, rowspan = 2, sticky="nsew")
-
-
-def on_closing():
-    # Annuler tous les événements planifiés ici avec after_cancel
-    # Exemple : root.after_cancel(id_de_mon_event_after)
-    
-    # Arrêter la boucle principale
-    root.destroy()
-
-root.protocol("WM_DELETE_WINDOW", on_closing)
 
 root.mainloop()

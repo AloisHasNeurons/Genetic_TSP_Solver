@@ -36,11 +36,14 @@ def dataProcessing(country, nb_cities):
 
     city_list = data_city.apply(lambda row: City(row['Longitude'], row['Latitude'], row['City']), axis=1).tolist()
     return city_list, data_city
+
+
 #######################################################
 #!####  Exécution de l'Algorithme génétique ###########
+#!####            Depuis le GUI             ###########
 #######################################################
-#? A partir de la liste de villes, créer 20 chemins "parents"
-# Initialisation de l'algorithme et de ses paramètres
+
+
 def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause) :
     city_list, data_city = dataProcessing(country, nb_cities)
     algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
@@ -51,13 +54,16 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, cou
         if(algo.pop.selectFittest(1) != algo.previous_best) : # Nouveau dessin que s'il sera différent
             gax = algo.drawBestRoutes(algo.pop, 1, gax)
             canvas.draw()
-            root.update_idletasks()  # Met à jour l'interface graphique et gère les événements
+            root.update()  # Met à jour l'interface graphique
             time.sleep(pause)  # Ajoute une pause pour ralentir l'exécution, ajustez selon besoin
     print("Done!")
-    algo.pop.selectFittest(1).printPopulation()
+    #algo.pop.selectFittest(1).printPopulation()
 
 
-
+#######################################################
+#!####  Exécution de l'Algorithme génétique ###########
+#!####            Depuis le main            ###########
+#######################################################
 
 def execute_main(mutation_rate, nb_cities, nb_iterations, population_size, country, pause): 
     city_list, data_city = dataProcessing(country, nb_cities)
@@ -79,7 +85,7 @@ def execute_main(mutation_rate, nb_cities, nb_iterations, population_size, count
             print("Itération " + str(i))
     # Affichage à la fin de l'exécution
     print("Done!")
-    algo.pop.selectFittest(1).printPopulation()
+    #algo.pop.selectFittest(1).printPopulation()
     plt.show()
 
 if __name__ == "__main__" :
