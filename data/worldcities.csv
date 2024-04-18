@@ -907,29 +907,11 @@ Canada,Edmonton,53.5344,-113.4903
 Canada,Ottawa,45.4247,-75.695
 Canada,Winnipeg,49.8844,-97.1464
 Canada,Quebec City,46.8139,-71.2081
-Canada,Hamilton,43.2567,-79.8692
-Canada,Mississauga,43.6,-79.65
-Canada,Brampton,43.6833,-79.7667
-Canada,Surrey,49.19,-122.8489
-Canada,Kitchener,43.4186,-80.4728
 Canada,Halifax,44.6475,-63.5906
-Canada,Laval,45.5833,-73.75
 Canada,London,42.9836,-81.2497
 Canada,Victoria,48.4283,-123.3647
-Canada,Markham,43.8767,-79.2633
-Canada,Oshawa,43.9,-78.85
-Canada,Vaughan,43.8333,-79.5
-Canada,Windsor,42.2833,-83
-Canada,Gatineau,45.4833,-75.65
 Canada,Saskatoon,52.1333,-106.6833
-Canada,Longueuil,45.5333,-73.5167
-Canada,Burnaby,49.2667,-122.9667
-Canada,St. Catharines,43.1833,-79.2333
 Canada,Regina,50.4547,-104.6067
-Canada,Oakville,43.45,-79.6833
-Canada,Richmond,49.1667,-123.1333
-Canada,Richmond Hill,43.8667,-79.4333
-Canada,Burlington,43.3167,-79.8
 Canada,St. John's,47.4817,-52.7971
 Canada,Kelowna,49.8881,-119.4956
 Canada,Sherbrooke,45.4,-71.9
@@ -1006,14 +988,11 @@ China,Shenzhen,22.5415,114.0596
 China,Chengdu,30.66,104.0633
 China,Xi'an,34.2611,108.9422
 China,Chongqing,29.5637,106.5504
-China,Baoding,38.874,115.464
 China,Linyi,35.1038,118.3564
-China,Dongguan,23.021,113.752
 China,Tianjin,39.1336,117.2054
 China,Wuhan,30.5934,114.3046
 China,Nanyang,32.9987,112.5292
 China,Hangzhou,30.267,120.153
-China,Foshan,23.0214,113.1216
 China,Tongshan,34.204,117.284
 China,Zhoukou,33.625,114.6418
 China,Ganzhou,25.831,114.933
@@ -1701,9 +1680,7 @@ Ethiopia,Metema,12.9667,36.2
 Ethiopia,Semera,11.7922,41.0086
 Finland,Helsinki,60.1708,24.9375
 Finland,Tampere,61.4981,23.76
-Finland,Espoo,60.2056,24.6556
 Finland,Turku,60.45,22.2667
-Finland,Vantaa,60.2944,25.0403
 Finland,Oulu,65.0142,25.4719
 Finland,Jyvaskyla,62.2417,25.7417
 Finland,Kuopio,62.8925,27.6783
@@ -1792,24 +1769,16 @@ Germany,Munich,48.1375,11.575
 Germany,Hamburg,53.55,10
 Germany,Cologne,50.9364,6.9528
 Germany,Frankfurt,50.1106,8.6822
-Germany,Dusseldorf,51.2333,6.7833
 Germany,Leipzig,51.34,12.375
-Germany,Dortmund,51.5139,7.4653
-Germany,Essen,51.4508,7.0131
 Germany,Bremen,53.0758,8.8072
 Germany,Dresden,51.05,13.74
 Germany,Hannover,52.3667,9.7167
 Germany,Nuremberg,49.4539,11.0775
-Germany,Duisburg,51.4347,6.7625
-Germany,Bochum,51.4819,7.2158
-Germany,Wuppertal,51.2667,7.1833
 Germany,Bielefeld,52.0211,8.5347
-Germany,Bonn,50.7333,7.1
 Germany,Munster,51.9625,7.6256
 Germany,Mannheim,49.4878,8.4661
 Germany,Karlsruhe,49.0092,8.404
 Germany,Augsburg,48.3689,10.8978
-Germany,Wiesbaden,50.0825,8.24
 Germany,Monchengladbach,51.2,6.4333
 Germany,Gelsenkirchen,51.5167,7.1
 Germany,Aachen,50.7756,6.0836
@@ -1888,45 +1857,20 @@ Ghana,Elmina,5.0833,-1.35
 Ghana,Kpandu,7,0.3
 Greece,Athens,37.9842,23.7281
 Greece,Thessaloniki,40.6403,22.9347
-Greece,Piraeus,37.943,23.6469
 Greece,Irakleio,35.3403,25.1344
 Greece,Patra,38.25,21.7333
 Greece,Larisa,39.6417,22.4167
-Greece,Peristeri,38.0167,23.6833
-Greece,Acharnes,38.0833,23.7333
-Greece,Kallithea,37.95,23.7
-Greece,Kalamaria,40.5833,22.95
-Greece,Glyfada,37.8667,23.75
-Greece,Nikaia,37.9667,23.6333
 Greece,Volos,39.3667,22.9333
-Greece,Ilion,38.0333,23.7
-Greece,Evosmos,40.6689,22.9083
-Greece,Ilioupoli,37.9333,23.75
-Greece,Chalandri,38.0167,23.8
-Greece,Keratsini,37.9667,23.6167
-Greece,Nea Smyrni,37.95,23.7167
-Greece,Marousi,38.05,23.8
-Greece,Agios Dimitrios,37.9333,23.7333
-Greece,Zografos,37.9783,23.7717
-Greece,Aigaleo,37.992,23.678
-Greece,Nea Ionia,38.0333,23.75
 Greece,Kavala,40.9333,24.4
 Greece,Ioannina,39.6636,20.8522
-Greece,Palaio Faliro,37.9333,23.7
-Greece,Korydallos,37.9833,23.65
-Greece,Agia Paraskevi,38.0117,23.82
 Greece,Trikala,39.55,21.7667
-Greece,Vyronas,37.9617,23.7533
 Greece,Alexandroupoli,40.85,25.8667
-Greece,Galatsi,38.0167,23.75
 Greece,Serres,41.0833,23.55
 Greece,Katerini,40.2667,22.5
 Greece,Chalkida,38.4625,23.595
-Greece,Petroupoli,38.0333,23.6833
 Greece,Kalamata,37.0378,22.1111
 Greece,Xanthi,41.1333,24.8833
 Greece,Rodos,36.4412,28.2225
-Greece,Thermi,40.55,23.0167
 Greece,Pallini,38,23.8833
 Greece,Komotini,41.1219,25.4042
 Greece,Chania,35.5167,24.0167
@@ -2100,13 +2044,11 @@ India,Jaipur,26.9,75.8
 India,Kanpur,26.4499,80.3319
 India,Mirzapur,25.146,82.569
 India,Nagpur,21.1497,79.0806
-India,Ghaziabad,28.67,77.42
 India,Supaul,26.126,86.605
 India,Vadodara,22.3,73.2
 India,Rajkot,22.3,70.7833
 India,Vishakhapatnam,17.7042,83.2978
 India,Indore,22.7167,75.8472
-India,Thane,19.1972,72.9722
 India,Bhopal,23.2599,77.4126
 India,Pimpri-Chinchwad,18.6186,73.8037
 India,Patna,25.594,85.1376
@@ -2240,9 +2182,7 @@ Iraq,Baghdad,33.3153,44.3661
 Iraq,Mosul,36.34,43.13
 Iraq,Al Basrah,30.515,47.81
 Iraq,Kirkuk,35.4667,44.3167
-Iraq,As Sulaymaniyah,35.5572,45.4356
 Iraq,Ar Ramadi,33.4258,43.2992
-Iraq,Erbil,36.1912,44.0092
 Iraq,An Najaf,32,44.33
 Iraq,Karbala',32.6167,44.0333
 Iraq,An Nasiriyah,31.0439,46.2575
@@ -2251,13 +2191,10 @@ Iraq,Al `Amarah,31.8333,47.15
 Iraq,Ba`qubah,33.75,44.6333
 Iraq,Ad Diwaniyah,31.9892,44.9247
 Iraq,Az Zubayr,30.3833,47.7
-Iraq,Sawran,36.6606,44.5508
-Iraq,Dahuk,36.8667,43
 Iraq,Al Kut,32.4907,45.8304
 Iraq,Ash Shamiyah,31.9636,44.5989
 Iraq,Al Qurnah,31.0158,47.4306
 Iraq,Al Hamzah,31.7339,45.0086
-Iraq,Raniyah,36.255,44.8836
 Iraq,Ash Shatrah,31.4097,46.1717
 Iraq,Sab` al Bur,33.4644,44.1536
 Iraq,Al Fallujah,33.35,43.7833
@@ -2290,25 +2227,16 @@ Ireland,Dublin,53.35,-6.2603
 Ireland,Finglas,53.4597,-6.2181
 Ireland,Cork,51.8972,-8.47
 Ireland,Galway,53.2719,-9.0489
-Ireland,Tallaght,53.2886,-6.3572
 Ireland,Limerick,52.6653,-8.6238
-Ireland,Lucan,53.3544,-6.4486
 Ireland,Waterford,52.2567,-7.1292
-Ireland,Clondalkin,53.3203,-6.3947
 Ireland,Dun Dealgan,54.0044,-6.4003
 Ireland,Drogheda,53.715,-6.3525
-Ireland,Swords,53.4597,-6.2181
 Ireland,Navan,53.6528,-6.6814
-Ireland,Blackrock,53.3015,-6.1778
 Ireland,Ennis,52.8463,-8.9807
-Ireland,Douglas,51.8764,-8.4358
 Ireland,Tralee,52.2675,-9.6962
 Ireland,Carlow,52.8306,-6.9317
-Ireland,Dunleary,53.3,-6.14
 Ireland,Port Laoise,53.0308,-7.3008
-Ireland,Rathfarnham,53.2988,-6.2854
 Ireland,Baile Atha Luain,53.4236,-7.9425
-Ireland,Ashtown,53.3754,-6.3326
 Ireland,Mullingar,53.5224,-7.3378
 Ireland,Letterkenny,54.9566,-7.7203
 Ireland,Kilkenny,52.6477,-7.2561
@@ -2349,12 +2277,10 @@ Italy,Catania,37.5,15.0903
 Italy,Verona,45.4386,10.9928
 Italy,Venice,45.4375,12.3358
 Italy,Messina,38.1936,15.5542
-Italy,Padova,45.4167,11.8667
 Italy,Cosenza,39.3,16.25
 Italy,Trieste,45.6503,13.7703
 Italy,Parma,44.8015,10.328
 Italy,Brescia,45.5417,10.2167
-Italy,Prato,43.88,11.0983
 Italy,Taranto,40.4711,17.2431
 Italy,Modena,44.6469,10.9256
 Italy,Reggio di Calabria,38.1114,15.6619

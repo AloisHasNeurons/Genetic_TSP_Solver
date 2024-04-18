@@ -44,20 +44,22 @@ def dataProcessing(country, nb_cities):
 #######################################################
 
 
-def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause) :
+def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause, progress_callback) :
     city_list, data_city = dataProcessing(country, nb_cities)
     algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
     for i in range(nb_iterations):
         algo.run()
-        if (i % 5 == 0):  # Affichage toutes les 5 itérations
+        if (i % 10 == 0):  # Affichage toutes les 10 itérations
             print("Itération " + str(i))
         if(algo.pop.selectFittest(1) != algo.previous_best) : # Nouveau dessin que s'il sera différent
             gax = algo.drawBestRoutes(algo.pop, 1, gax)
             canvas.draw()
             root.update()  # Met à jour l'interface graphique
             time.sleep(pause)  # Ajoute une pause pour ralentir l'exécution, ajustez selon besoin
+        progress_callback(i)
+
     print("Done!")
-    #algo.pop.selectFittest(1).printPopulation()
+
 
 
 #######################################################
@@ -80,23 +82,19 @@ def execute_main(mutation_rate, nb_cities, nb_iterations, population_size, count
             #? Garde le graphique ouvert lors de l'exécution du code
             fig.canvas.draw()
             plt.pause(pause) #Nombre de secondes d'affichage
-        # Affichage toutes les 5 itérations
-        if (i%5 == 0):
+        if (i % 10 == 0):  # Affichage toutes les 10 itérations
             print("Itération " + str(i))
     # Affichage à la fin de l'exécution
     print("Done!")
-    #algo.pop.selectFittest(1).printPopulation()
     plt.show()
 
 if __name__ == "__main__" :
-    country = "France"
-    city_list, data_city = dataProcessing(country, 15)
     execute_main(
-            nb_iterations = 100,
-            mutation_rate = 0.04,
-            population_size = 100, 
-            country = "France", 
-            nb_cities = 15,
+            nb_iterations = 150,
+            mutation_rate = 0.05,
+            population_size = 1000, 
+            country = "Colombia", 
+            nb_cities = 18,
             pause = 0.01)
 
 #TODO : interface graphique, pourquoi pas : affichage de graphiques (en R ?) pour les statistiques sur les scores de chaque itération

@@ -21,6 +21,7 @@ class GeneticAlgorithm:
         self.gdf = gpd.GeoDataFrame(data_city, geometry="Coordinates")
         self.pop = self.init_population()
         self.previous_best = None
+        self.capital = city_list[0]
 
         # This should be the path to the downloaded countries shapefile.
         if os.name == "nt" : # Windows
@@ -156,7 +157,6 @@ class GeneticAlgorithm:
                             if e not in c:
                                 c[i] = e
                                 break
-
         return Route("Child 1", c1), Route("Child 2", c2)
 
     ###############################################
@@ -188,7 +188,7 @@ class GeneticAlgorithm:
         # Définition de la position de la mutation
         x = random.randint(2, self.nb_cities)
         #Vérification supplémentaire qu'on ne bouge pas la ville de départ
-        while cities[x].name == "Paris" or cities[x-1].name == "Paris" :
+        while cities[x].name == self.capital.name or cities[x-1].name == self.capital.name :
             x = random.randint(2, self.nb_cities)  
         # Déballage de tuple pour échanger les positions  
         cities[x], cities[x - 1] = cities[x - 1], cities[x]
@@ -201,9 +201,9 @@ class GeneticAlgorithm:
         # Définition des positions à échanger mutation
         pos1, pos2 = random.randint(1, nb_cities), random.randint(1, nb_cities)
         # Vérification supplémentaire qu'on ne bouge pas la ville de départ, et que les positions 1 et 2 sont !=
-        while cities[pos1].name == "Paris" :
+        while cities[pos1].name == self.capital.name :
             pos1 = random.randint(1, nb_cities) 
-        while pos1 == pos2 or cities[pos2].name == "Paris" :
+        while pos1 == pos2 or cities[pos2].name == self.capital.name :
             pos2 = random.randint(1, nb_cities)
         # Déballage de tuple pour échanger les positions  
         cities[pos1], cities[pos2] = cities[pos2], cities[pos1]
