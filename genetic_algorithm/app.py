@@ -152,7 +152,6 @@ class TopMapFrame(ctk.CTkFrame):
         self.progress.set(i/(self.nb_iterations-1))
 
 
-
 class MapFrame(ctk.CTkFrame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
@@ -174,50 +173,6 @@ class ParametersFrame(ctk.CTkFrame):
 #!########### Frames de ResultsPage : #############
 ###################################################
 
-
-# Initialisation de la fenêtre
-# root = ctk.CTk()
-# root.title("Algo génétique")
-# root.geometry("1400x1000")
-# root.protocol("WM_DELETE_WINDOW", root.quit)
-
-# # Initialisation des sections
-# topMapFrame = ctk.CTkFrame(master = root, fg_color= "red")
-# mapFrame = ctk.CTkFrame(master = root, fg_color= "purple")
-# statsFrame = ctk.CTkFrame(master= root, fg_color="green")
-# parametersFrame = ctk.CTkFrame(master= root, fg_color="blue")
-
-# # Réorganisation des cadres
-# topMapFrame.place(relx=0, rely=0, relwidth=0.55, relheight=0.2)
-# mapFrame.place(relx=0, rely=0.2, relwidth=0.55, relheight=0.8)
-# statsFrame.place(relx=0.55, rely=0, relwidth=0.45, relheight=0.5)
-# parametersFrame.place(relx=0.55, rely=0.5, relwidth=0.45, relheight=0.5)
-# # Figure
-# fig, gax = plt.subplots(figsize=(10,10))
-# canvas = FigureCanvasTkAgg(fig, master = mapFrame)
-# canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")  # Use grid instead of pack
-
-
-# nb_iterations = 100
-# start_btn = ctk.CTkButton(master = parametersFrame, text="Start", font=("Helvetica", 34), 
-#                           command= lambda : main.execute(
-#                            nb_iterations = nb_iterations,
-#                            canvas = canvas, 
-#                            fig = fig, 
-#                            gax = gax, 
-#                            mutation_rate = 0.04,
-#                            population_size = 100, 
-#                            country = country, 
-#                            root = root,
-#                            nb_cities = 15,
-#                            pause = 0.02,
-#                            progress_callback = setProgressIteration  # Ajoutez cette ligne
-#                            ))
-# start_btn.place(relx=0.5, rely=0.5, anchor="center")
-
-# progress = ctk.CTkProgressBar(master = topMapFrame, height = 30)
-# progress.place(relx=0.5, rely=0.5, anchor="center")
-# progress.set(0)
 
 app = App()
 app.mainloop()
