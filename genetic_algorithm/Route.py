@@ -31,9 +31,7 @@ class Route :
         for i in range(len(self.cities) - 1):
             total_dist += self.haversine(self.cities[i], self.cities[i+1])
         return round(total_dist, 2)
-
-    def containsCity(self, item) : 
-        return item in self.cities
+    
     
     def toString(self) :
         result = "Route " + self.name + " (score = " + str(self.score) +"km ) :\n"

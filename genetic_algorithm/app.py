@@ -3,6 +3,8 @@ import GeneticAlgorithm as algoGen
 import main as main
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from tkinter import StringVar
+import tkinter.ttk as ttk
 import time
 
 ####################################################
@@ -10,7 +12,8 @@ import time
 #!####  Gestion de l'affichage des fenêtres  #######
 ####################################################
 
-#TODO : Configurer les couleurs en light et darkmode
+#TODO : Configurer les couleurs en light et darkmode (faire un .json avec un thème custom : 
+#TODO :                                              VOIR AVEC JEAN POUR LES COULEURS)
 #       -> Proposer un bouton pour switch
 
 class App(ctk.CTk):
@@ -20,9 +23,12 @@ class App(ctk.CTk):
         self.geometry("1400x1000")
         self.protocol("WM_DELETE_WINDOW", self.quit)
         self.configure(fg_color="white")
+
+        with open('data\countries.txt', 'r') as file:
+            self.countries = [line.strip() for line in file.readlines()]
         self.toStartWindow()
 
-        #! Paramètres de l'algo :
+        #! Paramètres par défaut de l'algo :
         self.nb_iterations = 100
         self.nb_cities = 17
 
@@ -47,15 +53,14 @@ class App(ctk.CTk):
         self.start_algorithm()
 
     def start_algorithm(self):
-        country = "France"
         main.execute(
             nb_iterations= self.nb_iterations,
             canvas=self.mainPage.mapFrame.canvas, 
             fig=self.mainPage.mapFrame.fig, 
             gax=self.mainPage.mapFrame.gax, 
-            mutation_rate=0.04,
-            population_size=100, 
-            country=country, 
+            mutation_rate = self.startPage.mainFrame.get_mutation_rate(),
+            population_size= self.startPage.mainFrame.get_population_size(), 
+            country = self.startPage.mainFrame.get_country(),
             root=self,
             nb_cities=self.nb_cities,
             pause=0.02,
@@ -133,7 +138,6 @@ class MainFrame(ctk.CTkFrame):
         self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "Nombre d'itérations : 100", font= ("Helvetica", 20))
         self.iterationsSliderLabel.place(relx=0.1, rely=0.1, anchor="center")
 
-
         #? Slider du nombre de villes
         self.nbCitiesSlider = ctk.CTkSlider(master = self, from_= 3, to= 50, number_of_steps = 47,
                                             command=self.nb_CitiesSlide)
@@ -142,6 +146,26 @@ class MainFrame(ctk.CTkFrame):
         self.nbCitiesSliderLabel = ctk.CTkLabel(master = self, text = "Nombre de villes : 17", font= ("Helvetica", 20))
         self.nbCitiesSliderLabel.place(relx=0.1, rely=0.4, anchor="center")
         
+
+        #? Entrée du taux de mutation 
+        self.mutationRateEntry = ctk.CTkEntry(master = self, placeholder_text = "0.05", font= ("Helvetica", 20))
+        self.mutationRateEntry.place(relx=0.1, rely=0.8, anchor="center")
+        self.mutationRateEntryLabel = ctk.CTkLabel(master = self, text = "Mutation Rate :", font= ("Helvetica", 20)) 
+        self.mutationRateEntryLabel.place(relx=0.1, rely=0.7, anchor="center")
+
+        #? Entrée de population_size
+        self.populationSizeEntry = ctk.CTkEntry(master = self, placeholder_text = "100", font= ("Helvetica", 20))
+        self.populationSizeEntry.place(relx=0.5, rely=0.8, anchor="center")
+        self.populationSizeEntryLabel = ctk.CTkLabel(master = self, text = "Population Size :", font= ("Helvetica", 20)) 
+        self.populationSizeEntryLabel.place(relx=0.5, rely=0.7, anchor="center")
+
+
+        #? ComboBox de countries
+        self.countryVar = StringVar()
+        self.countryVar.set(master.master.countries[29])  # default value = 'France'
+        # Utilisation de ttk pour avoir une liste scrollable
+        self.countryCombobox = ttk.Combobox(master=self, textvariable=self.countryVar, values=master.master.countries, state="readonly", font= ("Helvetica", 20))
+        self.countryCombobox.place(relx=0.5, rely=0.2, anchor="center")
 
     #? Méthodes associées aux sliders 
     def nb_iterationsSlide(self, value):
@@ -152,10 +176,32 @@ class MainFrame(ctk.CTkFrame):
         self.nbCitiesSliderLabel.configure(text="Nombre de villes : " + str(round(value)))
         self.set_nbCities(value)
 
+    #? Méthodes associées aux entries
+    def get_mutation_rate(self):
+        try:
+            mutation_rate = float(self.mutationRateEntry.get())
+            if 0 <= mutation_rate <= 1:
+                return mutation_rate
+            else:
+                raise ValueError
+        except ValueError:
+            return 0.05  # default value
+
+    def get_population_size(self):
+       try:
+           population_size = int(self.populationSizeEntry.get())
+           if 2 <= population_size <= 2147483647:  # max value of an int
+               return population_size
+           else:
+               raise ValueError
+       except ValueError:
+           return 100  # default value
+
+    #? Méthodes associées à la comboBox
+    def get_country(self):
+        return self.countryVar.get()
+
 #* Paramètres à intégrer 
-#mutation_rate
-#population_size
-#country
 #pause
 
 
