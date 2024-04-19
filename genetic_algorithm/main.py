@@ -44,7 +44,7 @@ def dataProcessing(country, nb_cities):
 #######################################################
 
 
-def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause, progress_callback) :
+def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause, progress_callback, stats_callback) :
     city_list, data_city = dataProcessing(country, nb_cities)
     algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
     for i in range(nb_iterations):
@@ -57,6 +57,8 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, cou
             root.update()  # Met à jour l'interface graphique
             time.sleep(pause)  # Ajoute une pause pour ralentir l'exécution, ajustez selon besoin
         progress_callback(i)
+        best, average = algo.pop.statsDistance()
+        stats_callback(best = round(best, 2), average = round(average, 2))
 
     print("Done!")
 

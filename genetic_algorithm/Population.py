@@ -18,3 +18,12 @@ class Population :
         for i in range(nb):
             result[i] = sortedList[i]
         return Population(result, self.city_list)
+
+    def statsDistance(self):
+        # Renvoie la meilleure distance et la distance moyenne d'une population
+        best = self.selectFittest(1).routes[0].score
+        average = 0
+        for route in self.routes:
+            average += route.score
+        average = average/len(self.routes)
+        return best, average
