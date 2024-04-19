@@ -24,17 +24,21 @@ class App(ctk.CTk):
 
         #! Paramètres de l'algo :
         self.nb_iterations = 100
+        self.nb_cities = 17
 
     def set_iterations(self, value):
         self.nb_iterations = round(value)
+
+    def set_nbCities(self, value) :
+        self.nb_cities = round(value)
 
     def update_stats(self, best, average):
         self.mainPage.statsFrame.setStatsTexts(best, average)
 
     def toStartWindow(self):
-        self.startPage = StartPage(master=self, fg_color="red", to_main_window=self.toMainWindow, set_iterations= self.set_iterations,  update_stats=self.update_stats)
+        self.startPage = StartPage(master=self, fg_color="red", to_main_window=self.toMainWindow, set_iterations= self.set_iterations, set_nbCities=self.set_nbCities, update_stats=self.update_stats)
         self.startPage.pack(fill = "both", expand = True)
-    
+
     def toMainWindow(self, nb_iterations):
         self.nb_iterations = nb_iterations
         self.startPage.destroy()
@@ -53,7 +57,7 @@ class App(ctk.CTk):
             population_size=100, 
             country=country, 
             root=self,
-            nb_cities=15,
+            nb_cities=self.nb_cities,
             pause=0.02,
             progress_callback=self.mainPage.topMapFrame.setProgressIteration,
             stats_callback = self.mainPage.statsFrame.setStatsTexts
@@ -64,7 +68,7 @@ class App(ctk.CTk):
 ####################################################
 
 class StartPage(ctk.CTkFrame):
-    def __init__(self, master=None, to_main_window=None, set_iterations=None, update_stats=None, **kwargs):
+    def __init__(self, master=None, to_main_window=None, set_iterations=None, set_nbCities=None, update_stats=None, **kwargs):
         super().__init__(master, **kwargs)
 
         for i in range(3) :
@@ -73,7 +77,7 @@ class StartPage(ctk.CTkFrame):
             self.grid_columnconfigure(i, weight=1)
             
         self.titleFrame = TitleFrame(master=self, fg_color = "ghostwhite")
-        self.mainFrame = MainFrame(master = self, fg_color = "lightgreen", set_iterations=set_iterations, update_stats=update_stats)
+        self.mainFrame = MainFrame(master = self, fg_color = "lightgreen", set_iterations=set_iterations, set_nbCities=set_nbCities, update_stats=update_stats)
         self.bottomFrame = BottomFrame(master=self, fg_color="lightblue", to_main_window=to_main_window)
         self.titleFrame.grid( row = 0, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
         self.mainFrame.grid(  row = 1, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
@@ -115,23 +119,45 @@ class TitleFrame(ctk.CTkFrame):
         self.title.place(relx=0.5, rely=0.5, anchor="center")
 
 class MainFrame(ctk.CTkFrame):
-    def __init__(self, master, set_iterations=None, update_stats=None, **kwargs):
+    def __init__(self, master, set_iterations=None, set_nbCities=None, update_stats=None, **kwargs):
         self.set_iterations = set_iterations
+        self.set_nbCities = set_nbCities
         self.update_stats = update_stats
         super().__init__(master, **kwargs)
+
+        #? Slider du nombre d'itérations
         self.iterationsSlider = ctk.CTkSlider(master = self, from_= 10, to= 500, number_of_steps = 100,
                                               command=self.nb_iterationsSlide)
-        self.iterationsSlider.place(relx=0.5, rely=0.5, anchor="center")
+        self.iterationsSlider.place(relx=0.1, rely=0.2, anchor="center")
         self.iterationsSlider.set(100)
+        self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "Nombre d'itérations : 100", font= ("Helvetica", 20))
+        self.iterationsSliderLabel.place(relx=0.1, rely=0.1, anchor="center")
 
-        self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "Nombre d'itérations :", font= ("Helvetica", 20))
-        self.iterationsSliderValue = ctk.CTkLabel(master = self, text = "100", font= ("Helvetica", 20))
-        self.iterationsSliderLabel.place(relx=0.5, rely=0.4, anchor="center")
-        self.iterationsSliderValue.place(relx=0.5, rely=0.6, anchor="center")
 
+        #? Slider du nombre de villes
+        self.nbCitiesSlider = ctk.CTkSlider(master = self, from_= 3, to= 50, number_of_steps = 47,
+                                            command=self.nb_CitiesSlide)
+        self.nbCitiesSlider.place(relx=0.1, rely=0.5, anchor="center")
+        self.nbCitiesSlider.set(17)
+        self.nbCitiesSliderLabel = ctk.CTkLabel(master = self, text = "Nombre de villes : 17", font= ("Helvetica", 20))
+        self.nbCitiesSliderLabel.place(relx=0.1, rely=0.4, anchor="center")
+        
+
+    #? Méthodes associées aux sliders 
     def nb_iterationsSlide(self, value):
-        self.iterationsSliderValue.configure(text=round(value))
+        self.iterationsSliderLabel.configure(text="Nombre d'itérations : " + str(round(value)))
         self.set_iterations(value)
+
+    def nb_CitiesSlide(self, value):
+        self.nbCitiesSliderLabel.configure(text="Nombre de villes : " + str(round(value)))
+        self.set_nbCities(value)
+
+#* Paramètres à intégrer 
+#mutation_rate
+#population_size
+#country
+#pause
+
 
 
 class BottomFrame(ctk.CTkFrame):

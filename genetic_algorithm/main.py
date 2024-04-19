@@ -51,11 +51,11 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, cou
         algo.run()
         if (i % 10 == 0):  # Affichage toutes les 10 itérations
             print("Itération " + str(i))
-        if(algo.pop.selectFittest(1) != algo.previous_best) : # Nouveau dessin que s'il sera différent
+        if (algo.pop.selectFittest(1) != algo.previous_best) : # Nouveau dessin que s'il sera différent
             gax = algo.drawBestRoutes(algo.pop, 1, gax)
             canvas.draw()
             root.update()  # Met à jour l'interface graphique
-            time.sleep(pause)  # Ajoute une pause pour ralentir l'exécution, ajustez selon besoin
+            time.sleep(pause)  # Ajoute une pause pour ralentir l'exécution
         progress_callback(i)
         best, average = algo.pop.statsDistance()
         stats_callback(best = round(best, 2), average = round(average, 2))
