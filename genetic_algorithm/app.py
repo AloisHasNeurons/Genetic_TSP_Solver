@@ -21,10 +21,10 @@ class App(ctk.CTk):
         super().__init__()
         #! Initialisation des paramètres par défaut
         self.mutation_rate = 0.05
-        self.population_size = 100
+        self.population_size = 500
         self.country = 'France'
         self.nb_routes = 1
-        self.nb_iterations = 100
+        self.nb_iterations = 500
         self.nb_cities = 17
 
         self.title("Algo génétique")
@@ -105,7 +105,8 @@ class App(ctk.CTk):
             pause=0.02,
             progress_callback=self.mainPage.topMapFrame.setProgressIteration,
             stats_callback = self.mainPage.statsFrame.setStatsTexts,
-            nb_routes = nb_routes 
+            nb_routes = nb_routes,
+            stop_callback = self.mainPage.topMapFrame.setStopMessage 
         )
         self.mainPage.parametersFrame.next_button()
 
@@ -115,8 +116,8 @@ class App(ctk.CTk):
 
 class StartPage(ctk.CTkFrame):
     def __init__(self, master=None, to_main_window=None, set_iterations=None, set_nbCities=None, 
-                 update_stats=None, mutation_rate=0.05, population_size=100, country='France', 
-                 nb_routes=1, nb_iterations = 100, nb_cities = 17, **kwargs):
+                 update_stats=None, mutation_rate=0.05, population_size=500, country='France', 
+                 nb_routes=1, nb_iterations = 500, nb_cities = 17, **kwargs):
         super().__init__(master, **kwargs)
 
         for i in range(3) :
@@ -190,7 +191,7 @@ class TitleFrame(ctk.CTkFrame):
 
 class MainFrame(ctk.CTkFrame):
     def __init__(self, master, set_iterations=None, set_nbCities=None, update_stats=None, mutation_rate=0.05, 
-                 population_size=100, country='France', nb_routes=1, nb_iterations = 100, nb_cities = 17, **kwargs):
+                 population_size=500, country='France', nb_routes=1, nb_iterations = 500, nb_cities = 17, **kwargs):
         self.set_iterations = set_iterations
         self.set_nbCities = set_nbCities
         self.update_stats = update_stats
@@ -203,11 +204,11 @@ class MainFrame(ctk.CTkFrame):
         super().__init__(master, **kwargs)
 
         #? Slider du nombre d'itérations
-        self.iterationsSlider = ctk.CTkSlider(master = self, from_= 10, to= 500, number_of_steps = 100,
+        self.iterationsSlider = ctk.CTkSlider(master = self, from_= 50, to= 5000, number_of_steps = 99,
                                               command=self.nb_iterationsSlide)
         self.iterationsSlider.place(relx=0.1, rely=0.2, anchor="center")
         self.iterationsSlider.set(nb_iterations)
-        self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "Nombre d'itérations : 100", font= ("Helvetica", 20))
+        self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "Nombre d'itérations : 500", font= ("Helvetica", 20))
         self.iterationsSliderLabel.place(relx=0.1, rely=0.1, anchor="center")
 
         #? Slider du nombre de villes
@@ -228,7 +229,7 @@ class MainFrame(ctk.CTkFrame):
         self.mutationRateEntryLabel.place(relx=0.1, rely=0.7, anchor="center")
 
         #? Entrée de population_size
-        self.populationSizeEntry = ctk.CTkEntry(master = self, placeholder_text = "100", font= ("Helvetica", 20))
+        self.populationSizeEntry = ctk.CTkEntry(master = self, placeholder_text = "500", font= ("Helvetica", 20))
         self.populationSizeEntry.place(relx=0.5, rely=0.8, anchor="center")
         self.populationSizeEntry.insert(0, str(population_size))  # Initialisation avec la valeur de population_size
 
@@ -283,7 +284,7 @@ class MainFrame(ctk.CTkFrame):
            else:
                raise ValueError
        except ValueError:
-           return 100  # default value
+           return 500  # default value
 
     #? Méthodes associées aux Combobox
     def get_country(self):
@@ -312,14 +313,25 @@ class BottomFrame(ctk.CTkFrame):
 class TopMapFrame(ctk.CTkFrame):
     def __init__(self, master, nb_iterations, **kwargs):
         super().__init__(master, **kwargs)
-        self.progress = ctk.CTkProgressBar(master=self,width = 500, height=20, corner_radius = 0, border_width = 2, border_color = "black", progress_color = "lime")
+        self.progress = ctk.CTkProgressBar(master=self, width = 500, height=20, corner_radius = 0, 
+                                           border_width = 2, border_color = "black",
+                                           progress_color = "lime")
         self.progress.place(relx=0.5, rely=0.5, anchor="center")
         self.progress.set(0)
         self.nb_iterations = nb_iterations
 
+        self.progressLabel = ctk.CTkLabel(master=self, text="Itération 0/" + str(round(nb_iterations)), font=("Helvetica", 20))
+        self.progressLabel.place(relx=0.5, rely=0.35, anchor="center")
+
+        self.stopLabel = ctk.CTkLabel(master=self, text="", font=("Helvetica", 20))
+        self.stopLabel.place(relx=0.5, rely=0.65, anchor="center")
+
     def setProgressIteration(self, i):
         self.progress.set(i/(self.nb_iterations-1))
+        self.progressLabel.configure(text="Itération " + str(i+1) + "/" + str(round(self.nb_iterations)))
 
+    def setStopMessage(self, i):
+           self.stopLabel.configure(text=str(i))
 
 class MapFrame(ctk.CTkFrame):
     def __init__(self, master=None, **kwargs):

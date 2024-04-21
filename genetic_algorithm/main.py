@@ -44,32 +44,49 @@ def dataProcessing(country, nb_cities):
 #######################################################
 
 
-def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause, progress_callback, stats_callback, nb_routes) :
+def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, 
+            country, root, nb_cities, pause, progress_callback, stats_callback,
+            nb_routes, stop_callback) :
+    # Formattage des donnéees pour correspondre au pays sélectionné
     city_list, data_city = dataProcessing(country, nb_cities)
+    # Création d'une instance de l'algo avec les paramètres
     algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
+    # Création des variables des conditions d'arrêt
     no_improvement_counter = 0
     best_solution = float('inf')
+    # Boucle de n itérations :
     for i in range(nb_iterations):
+        # Produit une itération de l'algo
         algo.run(nb_routes)
-        if (i % 10 == 0):  # Affichage toutes les 10 itérations
-            print("Itération " + str(i))
+        # Met à jour la barre de progression de l'interface graphique
+        progress_callback(i)
+
+        #! Mise à jour du dessin
         if (algo.pop.selectFittest(nb_routes) != algo.previous_best) : # Nouveau dessin que s'il sera différent
             gax = algo.drawBestRoutes(algo.pop, nb_routes, gax)
             canvas.draw()
             root.update()  # Met à jour l'interface graphique
             time.sleep(pause)  # Ajoute une pause pour ralentir l'exécution
-        progress_callback(i)
+
+        #! Création des variables de statistiques, renvoi vers l'interface graphique
         best, average = algo.pop.statsDistance()
         stats_callback(best = round(best, 2), average = round(average, 2))
+
+        #! Conditions d'arrêt :
         if best < best_solution:
             best_solution = best
             no_improvement_counter = 0
         else:
             no_improvement_counter += 1
-        if no_improvement_counter >= 100:  # Stop if no improvement for 100 iterations
+        if no_improvement_counter >= 100:  #? On arrête si le meilleur chemin ne change pas pendant 100 itérations
             print("No improvement for 100 iterations, stopping at iteration " + str(i))
+            stop_callback("No improvement for 100 iterations, stopping at iteration " + str(i))
             break
-
+        #? On arrête également si la moyenne de la pop == le meilleur chemin 
+        if round(best, 2) == round(average,2):
+            print("Best score is equal to average score, stopping at iteration " + str(i))
+            stop_callback("Best score is equal to average score, stopping at iteration " + str(i))
+            break
     print("Done!")
 
 
