@@ -1,5 +1,5 @@
-from Population import Population
-from Route import Route
+from .Population import Population
+from .Route import Route
 import random
 import numpy as np
 import matplotlib.pyplot as plt

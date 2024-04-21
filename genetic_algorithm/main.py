@@ -1,5 +1,5 @@
-from City import City
-from GeneticAlgorithm import GeneticAlgorithm
+from .City import City
+from .GeneticAlgorithm import GeneticAlgorithm
 import os
 import numpy as np
 import pandas as pd
@@ -58,8 +58,6 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size,
     for i in range(nb_iterations):
         # Produit une itération de l'algo
         algo.run(nb_routes)
-        # Met à jour la barre de progression de l'interface graphique
-        progress_callback(i)
 
         #! Mise à jour du dessin
         if (algo.pop.selectFittest(nb_routes) != algo.previous_best) : # Nouveau dessin que s'il sera différent
@@ -87,6 +85,8 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size,
             print("Best score is equal to average score, stopping at iteration " + str(i))
             stop_callback("Best score is equal to average score, stopping at iteration " + str(i))
             break
+        # Met à jour la barre de progression de l'interface graphique
+        progress_callback(i)
     print("Done!")
 
 
