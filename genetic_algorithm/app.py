@@ -42,6 +42,8 @@ class App(ctk.CTk):
         self.mainPage.statsFrame.setStatsTexts(best, average)
 
     def toStartWindow(self):
+        if hasattr(self, 'resultsPage'):
+            self.resultsPage.destroy()
         self.startPage = StartPage(master=self, fg_color="red", to_main_window=self.toMainWindow, set_iterations= self.set_iterations, set_nbCities=self.set_nbCities, update_stats=self.update_stats)
         self.startPage.pack(fill = "both", expand = True)
 
@@ -73,8 +75,7 @@ class App(ctk.CTk):
             stats_callback = self.mainPage.statsFrame.setStatsTexts,
             nb_routes = self.startPage.mainFrame.get_nb_routes() 
         )
-        time.sleep(1)
-        self.toResultsWindow()
+        self.mainPage.parametersFrame.next_button()
 
 ####################################################
 #!########### Création des 3 fenêtres ##############
@@ -113,6 +114,8 @@ class MainPage(ctk.CTkFrame):
         self.grid_rowconfigure(1, weight=1)
         for i in range(5) :
             self.grid_columnconfigure(i, weight=1)
+
+
 
 class ResultsPage(ctk.CTkFrame):
     def __init__(self, master=None, **kwargs):
@@ -292,6 +295,11 @@ class ParametersFrame(ctk.CTkFrame):
         super().__init__(master, **kwargs)
 
 
+    def next_button(self):
+        self.next_button = ctk.CTkButton(master=self, text="Next", command=self.master.master.toResultsWindow)
+        self.next_button.pack()
+
+
 ###################################################
 #!########### Frames de ResultsPage : #############
 ###################################################
@@ -323,8 +331,7 @@ class ButtonsFrame(ctk.CTkFrame):
         pass
 
     def restart(self):
-        # Code to restart the program
-        pass
+        self.master.master.toStartWindow()
 
     def quit(self):
         self.master.quit()
