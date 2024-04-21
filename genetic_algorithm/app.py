@@ -11,7 +11,7 @@ import time
 #!###### Création de la fenêtre principale #########
 #!####  Gestion de l'affichage des fenêtres  #######
 ####################################################
-
+ctk.set_appearance_mode("light")
 #TODO : Configurer les couleurs en light et darkmode (faire un .json avec un thème custom : 
 #TODO :                                              VOIR AVEC JEAN POUR LES COULEURS)
 #       -> Proposer un bouton pour switch
@@ -52,6 +52,11 @@ class App(ctk.CTk):
         self.mainPage.pack(fill="both", expand=True)
         self.start_algorithm()
 
+    def toResultsWindow(self):
+        self.mainPage.destroy()
+        self.resultsPage = ResultsPage(master = self, fg_color="white")
+        self.resultsPage.pack(fill="both", expand = True)
+
     def start_algorithm(self):
         main.execute(
             nb_iterations= self.nb_iterations,
@@ -65,8 +70,11 @@ class App(ctk.CTk):
             nb_cities=self.nb_cities,
             pause=0.02,
             progress_callback=self.mainPage.topMapFrame.setProgressIteration,
-            stats_callback = self.mainPage.statsFrame.setStatsTexts
+            stats_callback = self.mainPage.statsFrame.setStatsTexts,
+            nb_routes = self.startPage.mainFrame.get_nb_routes() 
         )
+        time.sleep(1)
+        self.toResultsWindow()
 
 ####################################################
 #!########### Création des 3 fenêtres ##############
@@ -110,6 +118,22 @@ class ResultsPage(ctk.CTkFrame):
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
 
+        # Title
+        self.titleFrame = ResultsTitleFrame(master=self,fg_color="red")
+        self.titleFrame.grid(row=0, column=0, columnspan=5, sticky="nsew")
+
+        # Graphs (placeholder for now)
+        self.graphsFrame = GraphsFrame(master=self,fg_color="lightblue")
+        self.graphsFrame.grid(row=1, rowspan = 3, column=0, columnspan=5, sticky="nsew")
+
+        # Buttons
+        self.buttonsFrame = ButtonsFrame(master=self,fg_color="lightgreen")
+        self.buttonsFrame.grid(row=4, column=0, columnspan=5, sticky="nsew")
+
+
+        for i in range(5) :
+            self.grid_columnconfigure(i, weight=1)
+            self.grid_rowconfigure(i, weight=1)
 
 
 ###################################################
@@ -166,6 +190,14 @@ class MainFrame(ctk.CTkFrame):
         # Utilisation de ttk pour avoir une liste scrollable
         self.countryCombobox = ttk.Combobox(master=self, textvariable=self.countryVar, values=master.master.countries, state="readonly", font= ("Helvetica", 20))
         self.countryCombobox.place(relx=0.5, rely=0.2, anchor="center")
+        
+        #? Combobox du nombre de routes
+        self.nbRoutesVar = StringVar()
+        self.nbRoutesVar.set("1")  # default value = 1
+        self.nbRoutesComboboxLabel = ctk.CTkLabel(master = self, text = "Number of routes drawn :", font= ("Helvetica", 20)) 
+        self.nbRoutesComboboxLabel.place(relx=0.5, rely=0.3, anchor="center")
+        self.nbRoutesCombobox = ctk.CTkOptionMenu(master=self, variable=self.nbRoutesVar, values=[str(i) for i in range(1, 6)], state="readonly", font= ("Helvetica", 20))
+        self.nbRoutesCombobox.place(relx=0.5, rely=0.4, anchor="center")
 
     #? Méthodes associées aux sliders 
     def nb_iterationsSlide(self, value):
@@ -197,9 +229,11 @@ class MainFrame(ctk.CTkFrame):
        except ValueError:
            return 100  # default value
 
-    #? Méthodes associées à la comboBox
+    #? Méthodes associées aux Combobox
     def get_country(self):
         return self.countryVar.get()
+    def get_nb_routes(self):
+        return int(self.nbRoutesVar.get())
 
 #* Paramètres à intégrer 
 #pause
@@ -261,7 +295,39 @@ class ParametersFrame(ctk.CTkFrame):
 ###################################################
 #!########### Frames de ResultsPage : #############
 ###################################################
+class ResultsTitleFrame(ctk.CTkFrame):
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
+        self.title = ctk.CTkLabel(master=self, text="Résultats", font=("Helvetica", 20))
+        self.title.pack()
 
+class GraphsFrame(ctk.CTkFrame):
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
+        self.graphs = ctk.CTkLabel(master=self, text="Graphiques ici", font=("Helvetica", 20))
+        self.graphs.pack()
+
+class ButtonsFrame(ctk.CTkFrame):
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
+        self.open_map_button = ctk.CTkButton(master=self, text="Ouvrir la carte", command=self.open_map)
+        self.open_map_button.pack(side="left")
+        self.restart_button = ctk.CTkButton(master=self, text="Recommencer", command=self.restart)
+        self.restart_button.pack(side="left")
+        self.quit_button = ctk.CTkButton(master=self, text="Quitter", command=self.quit)
+        self.quit_button.pack(side="left")
+
+    #? Méthodes associées aux boutons
+    def open_map(self):
+        # Code to open the map
+        pass
+
+    def restart(self):
+        # Code to restart the program
+        pass
+
+    def quit(self):
+        self.master.quit()
 
 app = App()
 app.mainloop()

@@ -44,15 +44,15 @@ def dataProcessing(country, nb_cities):
 #######################################################
 
 
-def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause, progress_callback, stats_callback) :
+def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause, progress_callback, stats_callback, nb_routes) :
     city_list, data_city = dataProcessing(country, nb_cities)
     algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
     for i in range(nb_iterations):
-        algo.run()
+        algo.run(nb_routes)
         if (i % 10 == 0):  # Affichage toutes les 10 itérations
             print("Itération " + str(i))
-        if (algo.pop.selectFittest(1) != algo.previous_best) : # Nouveau dessin que s'il sera différent
-            gax = algo.drawBestRoutes(algo.pop, 1, gax)
+        if (algo.pop.selectFittest(nb_routes) != algo.previous_best) : # Nouveau dessin que s'il sera différent
+            gax = algo.drawBestRoutes(algo.pop, nb_routes, gax)
             canvas.draw()
             root.update()  # Met à jour l'interface graphique
             time.sleep(pause)  # Ajoute une pause pour ralentir l'exécution

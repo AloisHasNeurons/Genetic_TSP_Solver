@@ -66,7 +66,6 @@ class GeneticAlgorithm:
         for longitude, latitude, label in zip(self.longitude, self.latitude, self.names):
             gax.annotate(label, xy=(longitude,latitude), xytext=(4,4), textcoords='offset points')
         
-        colors = ['red','purple','green','blue','pink']
 
         # Initialisation du nombre de routes à afficher 
         # On ne peut pas sélectionner plus de routes qu'il n'y en a dans la population
@@ -74,8 +73,10 @@ class GeneticAlgorithm:
         # 5 est notre nombre de routes maximal à afficher
         nb_routes = min(nb_routes, 5)
 
+        colors = ['red', 'blue', 'green', 'purple', 'pink']
+
         # On trace les chemins
-        for i in range(nb_routes) : 
+        for i in range(nb_routes-1, -1, -1): 
             villes = population.routes[i].cities
             for j in range(len(villes) - 1):
                 plt.plot([villes[j].longitude, villes[j+1].longitude], [villes[j].latitude, villes[j+1].latitude], color = colors[i])
@@ -213,9 +214,9 @@ class GeneticAlgorithm:
     #!########## Itérations ############
     ####################################
     # Produit une itération de l'algo
-    def run(self) :
+    def run(self, nb_routes) :
         previous_pop = self.pop
-        self.previous_best = previous_pop.selectFittest(1)
+        self.previous_best = previous_pop.selectFittest(nb_routes)
         pop_size = self.population_size
         # On sélectionne les 50% meilleures Routes de la population précédente
         newPopRoutes = previous_pop.selectFittest(int(pop_size/2)).routes
