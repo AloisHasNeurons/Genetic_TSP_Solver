@@ -19,6 +19,14 @@ ctk.set_appearance_mode("light")
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
+        #! Initialisation des paramètres par défaut
+        self.mutation_rate = 0.05
+        self.population_size = 100
+        self.country = 'France'
+        self.nb_routes = 1
+        self.nb_iterations = 100
+        self.nb_cities = 17
+
         self.title("Algo génétique")
         self.geometry("1400x1000")
         self.protocol("WM_DELETE_WINDOW", self.quit)
@@ -28,15 +36,18 @@ class App(ctk.CTk):
             self.countries = [line.strip() for line in file.readlines()]
         self.toStartWindow()
 
-        #! Paramètres par défaut de l'algo :
-        self.nb_iterations = 100
-        self.nb_cities = 17
 
     def set_iterations(self, value):
         self.nb_iterations = round(value)
 
-    def set_nbCities(self, value) :
+    def get_nb_iterations(self):
+        return self.startPage.mainFrame.iterationsSlider.get()    
+
+    def set_nbCities(self, value):
         self.nb_cities = round(value)
+
+    def get_nb_cities(self):
+        return self.startPage.mainFrame.nbCitiesSlider.get()
 
     def update_stats(self, best, average):
         self.mainPage.statsFrame.setStatsTexts(best, average)
@@ -44,36 +55,57 @@ class App(ctk.CTk):
     def toStartWindow(self):
         if hasattr(self, 'resultsPage'):
             self.resultsPage.destroy()
-        self.startPage = StartPage(master=self, fg_color="red", to_main_window=self.toMainWindow, set_iterations= self.set_iterations, set_nbCities=self.set_nbCities, update_stats=self.update_stats)
-        self.startPage.pack(fill = "both", expand = True)
-
+        self.startPage = StartPage(master=self, fg_color="white", to_main_window=self.toMainWindow, 
+                                set_iterations= self.set_iterations, set_nbCities=self.set_nbCities, 
+                                update_stats=self.update_stats, mutation_rate=self.mutation_rate, 
+                                population_size=self.population_size, country=self.country, 
+                                nb_routes=self.nb_routes, nb_iterations=self.nb_iterations, 
+                                nb_cities=self.nb_cities)                       
+        self.startPage.pack(fill="both", expand=True)
+        self.startPage.mainFrame.iterationsSlider.set(self.nb_iterations)
+        self.startPage.mainFrame.nbCitiesSlider.set(self.nb_cities)
+        self.startPage.mainFrame.iterationsSliderLabel.configure(text="Nombre d'itérations : " + str(self.nb_iterations))
+        self.startPage.mainFrame.nbCitiesSliderLabel.configure(text="Nombre de villes : " + str(self.nb_cities))
+    
     def toMainWindow(self, nb_iterations):
-        self.nb_iterations = nb_iterations
+        # Obtention des valeurs des paramètres
+        mutation_rate = self.startPage.mainFrame.get_mutation_rate()
+        population_size = self.startPage.mainFrame.get_population_size()
+        country = self.startPage.mainFrame.get_country()
+        nb_routes = self.startPage.mainFrame.get_nb_routes()
+        nb_iterations = self.get_nb_iterations()
+        nb_cities = self.get_nb_cities()
+        # Stockage des nouvelles valeurs des paramètres
+        self.mutation_rate = mutation_rate
+        self.population_size = population_size
+        self.country = country
+        self.nb_routes = nb_routes
+        # Destruction de l'ancienne fenêtre et création de la nouvelle
         self.startPage.destroy()
         self.mainPage = MainPage(master=self, fg_color="white", nb_iterations = nb_iterations)
         self.mainPage.pack(fill="both", expand=True)
-        self.start_algorithm()
+        self.start_algorithm(mutation_rate, population_size, country, nb_routes)
 
     def toResultsWindow(self):
         self.mainPage.destroy()
         self.resultsPage = ResultsPage(master = self, fg_color="white")
         self.resultsPage.pack(fill="both", expand = True)
 
-    def start_algorithm(self):
+    def start_algorithm(self, mutation_rate, population_size, country, nb_routes):
         main.execute(
             nb_iterations= self.nb_iterations,
             canvas=self.mainPage.mapFrame.canvas, 
             fig=self.mainPage.mapFrame.fig, 
             gax=self.mainPage.mapFrame.gax, 
-            mutation_rate = self.startPage.mainFrame.get_mutation_rate(),
-            population_size= self.startPage.mainFrame.get_population_size(), 
-            country = self.startPage.mainFrame.get_country(),
+            mutation_rate = mutation_rate,
+            population_size= population_size, 
+            country = country,
             root=self,
             nb_cities=self.nb_cities,
             pause=0.02,
             progress_callback=self.mainPage.topMapFrame.setProgressIteration,
             stats_callback = self.mainPage.statsFrame.setStatsTexts,
-            nb_routes = self.startPage.mainFrame.get_nb_routes() 
+            nb_routes = nb_routes 
         )
         self.mainPage.parametersFrame.next_button()
 
@@ -82,7 +114,9 @@ class App(ctk.CTk):
 ####################################################
 
 class StartPage(ctk.CTkFrame):
-    def __init__(self, master=None, to_main_window=None, set_iterations=None, set_nbCities=None, update_stats=None, **kwargs):
+    def __init__(self, master=None, to_main_window=None, set_iterations=None, set_nbCities=None, 
+                 update_stats=None, mutation_rate=0.05, population_size=100, country='France', 
+                 nb_routes=1, nb_iterations = 100, nb_cities = 17, **kwargs):
         super().__init__(master, **kwargs)
 
         for i in range(3) :
@@ -91,12 +125,16 @@ class StartPage(ctk.CTkFrame):
             self.grid_columnconfigure(i, weight=1)
             
         self.titleFrame = TitleFrame(master=self, fg_color = "ghostwhite")
-        self.mainFrame = MainFrame(master = self, fg_color = "lightgreen", set_iterations=set_iterations, set_nbCities=set_nbCities, update_stats=update_stats)
+        self.mainFrame = MainFrame(master = self, fg_color = "lightgreen", set_iterations=set_iterations, 
+                                   set_nbCities=set_nbCities, update_stats=update_stats, 
+                                   mutation_rate=mutation_rate, population_size=population_size, 
+                                   country=country, nb_routes=nb_routes, nb_iterations=nb_iterations, 
+                                   nb_cities=nb_cities) 
         self.bottomFrame = BottomFrame(master=self, fg_color="lightblue", to_main_window=to_main_window)
+
         self.titleFrame.grid( row = 0, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
         self.mainFrame.grid(  row = 1, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
         self.bottomFrame.grid(row = 2, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
-
 
 class MainPage(ctk.CTkFrame):
     def __init__(self, nb_iterations, master=None, **kwargs):
@@ -151,17 +189,24 @@ class TitleFrame(ctk.CTkFrame):
         self.title.place(relx=0.5, rely=0.5, anchor="center")
 
 class MainFrame(ctk.CTkFrame):
-    def __init__(self, master, set_iterations=None, set_nbCities=None, update_stats=None, **kwargs):
+    def __init__(self, master, set_iterations=None, set_nbCities=None, update_stats=None, mutation_rate=0.05, 
+                 population_size=100, country='France', nb_routes=1, nb_iterations = 100, nb_cities = 17, **kwargs):
         self.set_iterations = set_iterations
         self.set_nbCities = set_nbCities
         self.update_stats = update_stats
+        self.mutation_rate = mutation_rate
+        self.population_size = population_size
+        self.country = country
+        self.nb_routes = nb_routes
+        self.nb_iterations = nb_iterations
+        self.nb_cities = nb_cities
         super().__init__(master, **kwargs)
 
         #? Slider du nombre d'itérations
         self.iterationsSlider = ctk.CTkSlider(master = self, from_= 10, to= 500, number_of_steps = 100,
                                               command=self.nb_iterationsSlide)
         self.iterationsSlider.place(relx=0.1, rely=0.2, anchor="center")
-        self.iterationsSlider.set(100)
+        self.iterationsSlider.set(nb_iterations)
         self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "Nombre d'itérations : 100", font= ("Helvetica", 20))
         self.iterationsSliderLabel.place(relx=0.1, rely=0.1, anchor="center")
 
@@ -169,7 +214,7 @@ class MainFrame(ctk.CTkFrame):
         self.nbCitiesSlider = ctk.CTkSlider(master = self, from_= 3, to= 50, number_of_steps = 47,
                                             command=self.nb_CitiesSlide)
         self.nbCitiesSlider.place(relx=0.1, rely=0.5, anchor="center")
-        self.nbCitiesSlider.set(17)
+        self.nbCitiesSlider.set(nb_cities)  
         self.nbCitiesSliderLabel = ctk.CTkLabel(master = self, text = "Nombre de villes : 17", font= ("Helvetica", 20))
         self.nbCitiesSliderLabel.place(relx=0.1, rely=0.4, anchor="center")
         
@@ -177,12 +222,16 @@ class MainFrame(ctk.CTkFrame):
         #? Entrée du taux de mutation 
         self.mutationRateEntry = ctk.CTkEntry(master = self, placeholder_text = "0.05", font= ("Helvetica", 20))
         self.mutationRateEntry.place(relx=0.1, rely=0.8, anchor="center")
+        self.mutationRateEntry.insert(0, str(mutation_rate))  # Initialisation avec la valeur de mutation_rate
+
         self.mutationRateEntryLabel = ctk.CTkLabel(master = self, text = "Mutation Rate :", font= ("Helvetica", 20)) 
         self.mutationRateEntryLabel.place(relx=0.1, rely=0.7, anchor="center")
 
         #? Entrée de population_size
         self.populationSizeEntry = ctk.CTkEntry(master = self, placeholder_text = "100", font= ("Helvetica", 20))
         self.populationSizeEntry.place(relx=0.5, rely=0.8, anchor="center")
+        self.populationSizeEntry.insert(0, str(population_size))  # Initialisation avec la valeur de population_size
+
         self.populationSizeEntryLabel = ctk.CTkLabel(master = self, text = "Population Size :", font= ("Helvetica", 20)) 
         self.populationSizeEntryLabel.place(relx=0.5, rely=0.7, anchor="center")
 
@@ -190,6 +239,8 @@ class MainFrame(ctk.CTkFrame):
         #? ComboBox de countries
         self.countryVar = StringVar()
         self.countryVar.set(master.master.countries[29])  # default value = 'France'
+        self.countryVar.set(country)  # Initialisation avec la valeur de country
+
         # Utilisation de ttk pour avoir une liste scrollable
         self.countryCombobox = ttk.Combobox(master=self, textvariable=self.countryVar, values=master.master.countries, state="readonly", font= ("Helvetica", 20))
         self.countryCombobox.place(relx=0.5, rely=0.2, anchor="center")
@@ -197,6 +248,8 @@ class MainFrame(ctk.CTkFrame):
         #? Combobox du nombre de routes
         self.nbRoutesVar = StringVar()
         self.nbRoutesVar.set("1")  # default value = 1
+        self.nbRoutesVar.set(str(nb_routes))  # Initialisation avec la valeur de nb_routes
+
         self.nbRoutesComboboxLabel = ctk.CTkLabel(master = self, text = "Number of routes drawn :", font= ("Helvetica", 20)) 
         self.nbRoutesComboboxLabel.place(relx=0.5, rely=0.3, anchor="center")
         self.nbRoutesCombobox = ctk.CTkOptionMenu(master=self, variable=self.nbRoutesVar, values=[str(i) for i in range(1, 6)], state="readonly", font= ("Helvetica", 20))

@@ -47,6 +47,8 @@ def dataProcessing(country, nb_cities):
 def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, country, root, nb_cities, pause, progress_callback, stats_callback, nb_routes) :
     city_list, data_city = dataProcessing(country, nb_cities)
     algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
+    no_improvement_counter = 0
+    best_solution = float('inf')
     for i in range(nb_iterations):
         algo.run(nb_routes)
         if (i % 10 == 0):  # Affichage toutes les 10 itérations
@@ -59,9 +61,16 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size, cou
         progress_callback(i)
         best, average = algo.pop.statsDistance()
         stats_callback(best = round(best, 2), average = round(average, 2))
+        if best < best_solution:
+            best_solution = best
+            no_improvement_counter = 0
+        else:
+            no_improvement_counter += 1
+        if no_improvement_counter >= 100:  # Stop if no improvement for 100 iterations
+            print("No improvement for 100 iterations, stopping at iteration " + str(i))
+            break
 
     print("Done!")
-
 
 
 #######################################################
