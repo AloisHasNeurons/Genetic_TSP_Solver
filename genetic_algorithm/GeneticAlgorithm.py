@@ -167,21 +167,21 @@ class GeneticAlgorithm:
         for i in range(len(population.routes)): 
             for j in range(1, self.nb_cities - 1) :  
                 if random.random() < self.mutation_rate:
-                    x = random.randint(0, 2)
+                    x = random.randint(0, 1)
                     if x == 0 :
-                        population.routes[j] = self.fullReverse(population=population, position = j)
-                    elif x == 1 :
                         population.routes[j] = self.partReverse(population=population, position = j)
-                    elif x == 2 :
+                    elif x == 1 :
                         population.routes[j] = self.moveTwo(population=population, position=j)
                     #TODO : Rajouter d'autres types de mutations 
         return population
 
-    # Mutation qui inverse l'ordre de toutes les villes
-    def fullReverse(self, population, position):
-        cities = population.routes[position].cities
-        # Slicing pour obtenir la liste inversée
-        return Route(name = population.routes[position].name, cities=cities[::-1])
+
+    #? Probablement contre-productive : induit de la redondance
+    # # Mutation qui inverse l'ordre de toutes les villes
+    # def fullReverse(self, population, position):
+    #     cities = population.routes[position].cities
+    #     # Slicing pour obtenir la liste inversée
+    #     return Route(name = population.routes[position].name, cities=cities[::-1])
 
     # Mutation qui inverse l'ordre de deux villes adjacentes
     def partReverse(self, population, position):
