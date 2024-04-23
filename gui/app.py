@@ -95,11 +95,11 @@ class App(ctk.CTk):
 
     def toResultsWindow(self):
         self.mainPage.destroy()
-        self.resultsPage = ResultsPage(master = self, fg_color="white")
+        self.resultsPage = ResultsPage(master = self, best_list = self.best_list, average_list = self.average_list, fg_color="white")
         self.resultsPage.pack(fill="both", expand = True)
 
     def start_algorithm(self, mutation_rate, population_size, country, nb_routes):
-        main.execute(
+        self.best_list, self.average_list = main.execute(
             nb_iterations= self.nb_iterations,
             canvas=self.mainPage.mapFrame.canvas, 
             fig=self.mainPage.mapFrame.fig, 

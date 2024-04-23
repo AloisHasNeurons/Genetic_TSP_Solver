@@ -51,6 +51,9 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size,
     city_list, data_city = dataProcessing(country, nb_cities)
     # Création d'une instance de l'algo avec les paramètres
     algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
+    #  Création des listes pour les graphiques de statistiques
+    best_list = []
+    average_list = []
     # Création des variables des conditions d'arrêt
     no_improvement_counter = 0
     best_solution = float('inf')
@@ -68,6 +71,8 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size,
 
         #! Création des variables de statistiques, renvoi vers l'interface graphique
         best, average = algo.pop.statsDistance()
+        best_list.append(best)
+        average_list.append(average)
         stats_callback(best = round(best, 2), average = round(average, 2))
 
         #! Conditions d'arrêt :
@@ -88,6 +93,7 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size,
         # Met à jour la barre de progression de l'interface graphique
         progress_callback(i)
     print("Done!")
+    return best_list, average_list
 
 
 #######################################################
