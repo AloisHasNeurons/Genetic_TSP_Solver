@@ -24,7 +24,7 @@ class TopMapFrame(ctk.CTkFrame):
     def __init__(self, master, nb_iterations, **kwargs):
         super().__init__(master, **kwargs)
         self.progress = ctk.CTkProgressBar(master=self, width = 500, height=20, corner_radius = 0, 
-                                           border_width = 2, border_color = "black",
+                                           border_width = 2, border_color = "grey",
                                            progress_color = "lime")
         self.progress.place(relx=0.5, rely=0.2, anchor="center")
         self.progress.set(0)

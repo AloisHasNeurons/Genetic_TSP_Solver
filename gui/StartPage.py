@@ -98,7 +98,8 @@ class MainFrame(ctk.CTkFrame):
 
         self.nbRoutesComboboxLabel = ctk.CTkLabel(master = self, text = "No. of routes drawn :", font= ("Helvetica", 20)) 
         self.nbRoutesComboboxLabel.place(relx=0.5, rely=0.6, anchor="center")
-        self.nbRoutesCombobox = ctk.CTkOptionMenu(master=self, variable=self.nbRoutesVar, values=[str(i) for i in range(1, 6)], state="readonly", font= ("Helvetica", 20))
+        self.nbRoutesCombobox = ttk.Combobox(master=self, textvariable=self.nbRoutesVar, values=[str(i) for i in range(1, 6)], 
+                                                  state="readonly", font= ("Helvetica", 20))
         self.nbRoutesCombobox.place(relx=0.5, rely=0.7, anchor="center")
 
     #? Méthodes associées aux sliders 
