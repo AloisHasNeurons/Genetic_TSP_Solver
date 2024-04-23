@@ -34,7 +34,12 @@ class App(ctk.CTk):
         self.protocol("WM_DELETE_WINDOW", self.quit)
         self.configure(fg_color="white")
 
-        with open('data\countries.txt', 'r') as file:
+        # Chemin d'accès à la liste des pays, selon l'OS
+        if os.name == "nt" : # Windows
+            path = "data\\countries.txt"
+        else : # Unix
+            path = "data/countries.txt"
+        with open(path, 'r') as file:
             self.countries = [line.strip() for line in file.readlines()]
         self.toStartWindow()
 
