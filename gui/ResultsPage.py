@@ -4,15 +4,15 @@ class ResultsPage(ctk.CTkFrame):
         super().__init__(master, **kwargs)
 
         # Title
-        self.titleFrame = ResultsTitleFrame(master=self,fg_color="red")
+        self.titleFrame = ResultsTitleFrame(master=self,fg_color="black")
         self.titleFrame.grid(row=0, column=0, columnspan=5, sticky="nsew")
 
         # Graphs (placeholder for now)
-        self.graphsFrame = GraphsFrame(master=self,fg_color="lightblue")
+        self.graphsFrame = GraphsFrame(master=self,fg_color="white")
         self.graphsFrame.grid(row=1, rowspan = 3, column=0, columnspan=5, sticky="nsew")
 
         # Buttons
-        self.buttonsFrame = ButtonsFrame(master=self,fg_color="lightgreen")
+        self.buttonsFrame = ButtonsFrame(master=self,fg_color="white")
         self.buttonsFrame.grid(row=4, column=0, columnspan=5, sticky="nsew")
 
 

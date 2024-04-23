@@ -109,7 +109,7 @@ class App(ctk.CTk):
             country = country,
             root=self,
             nb_cities=self.nb_cities,
-            pause=0.02,
+            pause=0.01,
             progress_callback=self.mainPage.topMapFrame.setProgressIteration,
             stats_callback = self.mainPage.statsFrame.setStatsTexts,
             nb_routes = nb_routes,

@@ -76,9 +76,9 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size,
             no_improvement_counter = 0
         else:
             no_improvement_counter += 1
-        if no_improvement_counter >= 100:  #? On arrête si le meilleur chemin ne change pas pendant 100 itérations
-            print("No improvement for 100 iterations, stopping at iteration " + str(i))
-            stop_callback("No improvement for 100 iterations, stopping at iteration " + str(i))
+        if no_improvement_counter >= 200:  #? On arrête si le meilleur chemin ne change pas pendant 100 itérations
+            print("No improvement for 200 iterations, stopping at iteration " + str(i))
+            stop_callback("No improvement for 200 iterations, stopping at iteration " + str(i))
             break
         #? On arrête également si la moyenne de la pop == le meilleur chemin 
         if round(best, 2) == round(average,2):

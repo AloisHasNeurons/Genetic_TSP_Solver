@@ -7,22 +7,22 @@ class StartPage(ctk.CTkFrame):
                  nb_routes=1, nb_iterations = 500, nb_cities = 17, **kwargs):
         super().__init__(master, **kwargs)
 
-        for i in range(3) :
+        for i in range(5) :
             self.grid_rowconfigure(i, weight=1)
         for i in range(5) :
             self.grid_columnconfigure(i, weight=1)
             
-        self.titleFrame = TitleFrame(master=self, fg_color = "ghostwhite")
-        self.mainFrame = MainFrame(master = self, fg_color = "lightgreen", set_iterations=set_iterations, 
+        self.titleFrame = TitleFrame(master=self, fg_color = "gray2")
+        self.mainFrame = MainFrame(master = self, fg_color = "gray94", set_iterations=set_iterations, 
                                    set_nbCities=set_nbCities, update_stats=update_stats, 
                                    mutation_rate=mutation_rate, population_size=population_size, 
                                    country=country, nb_routes=nb_routes, nb_iterations=nb_iterations, 
                                    nb_cities=nb_cities) 
-        self.bottomFrame = BottomFrame(master=self, fg_color="lightblue", to_main_window=to_main_window)
+        self.bottomFrame = BottomFrame(master=self, fg_color="gray94", to_main_window=to_main_window)
 
         self.titleFrame.grid( row = 0, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
-        self.mainFrame.grid(  row = 1, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
-        self.bottomFrame.grid(row = 2, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
+        self.mainFrame.grid(  row = 1, rowspan = 3, column = 0, columnspan = 5, sticky="nsew")
+        self.bottomFrame.grid(row = 4, rowspan = 1, column = 0, columnspan = 5, sticky="nsew")
 
 
 ###################################################
@@ -31,7 +31,7 @@ class StartPage(ctk.CTkFrame):
 class TitleFrame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-        self.title = ctk.CTkLabel(master = self, text = "Entrée des paramètres", font= ("Helvetica", 34))
+        self.title = ctk.CTkLabel(master = self, text = "Entrée des paramètres", font= ("Helvetica", 34), text_color= "LavenderBlush")
         self.title.place(relx=0.5, rely=0.5, anchor="center")
 
 class MainFrame(ctk.CTkFrame):
@@ -51,35 +51,35 @@ class MainFrame(ctk.CTkFrame):
         #? Slider du nombre d'itérations
         self.iterationsSlider = ctk.CTkSlider(master = self, from_= 50, to= 5000, number_of_steps = 99,
                                               command=self.nb_iterationsSlide)
-        self.iterationsSlider.place(relx=0.1, rely=0.2, anchor="center")
+        self.iterationsSlider.place(relx=0.1, rely=0.3, anchor="center")
         self.iterationsSlider.set(nb_iterations)
         self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "Nombre d'itérations : 500", font= ("Helvetica", 20))
-        self.iterationsSliderLabel.place(relx=0.1, rely=0.1, anchor="center")
+        self.iterationsSliderLabel.place(relx=0.1, rely=0.2, anchor="center")
 
         #? Slider du nombre de villes
         self.nbCitiesSlider = ctk.CTkSlider(master = self, from_= 3, to= 50, number_of_steps = 47,
                                             command=self.nb_CitiesSlide)
-        self.nbCitiesSlider.place(relx=0.1, rely=0.5, anchor="center")
+        self.nbCitiesSlider.place(relx=0.1, rely=0.7, anchor="center")
         self.nbCitiesSlider.set(nb_cities)  
         self.nbCitiesSliderLabel = ctk.CTkLabel(master = self, text = "Nombre de villes : 17", font= ("Helvetica", 20))
-        self.nbCitiesSliderLabel.place(relx=0.1, rely=0.4, anchor="center")
+        self.nbCitiesSliderLabel.place(relx=0.1, rely=0.6, anchor="center")
         
 
         #? Entrée du taux de mutation 
         self.mutationRateEntry = ctk.CTkEntry(master = self, placeholder_text = "0.05", font= ("Helvetica", 20))
-        self.mutationRateEntry.place(relx=0.1, rely=0.8, anchor="center")
+        self.mutationRateEntry.place(relx=0.9, rely=0.7, anchor="center")
         self.mutationRateEntry.insert(0, str(mutation_rate))  # Initialisation avec la valeur de mutation_rate
 
         self.mutationRateEntryLabel = ctk.CTkLabel(master = self, text = "Mutation Rate :", font= ("Helvetica", 20)) 
-        self.mutationRateEntryLabel.place(relx=0.1, rely=0.7, anchor="center")
+        self.mutationRateEntryLabel.place(relx=0.9, rely=0.6, anchor="center")
 
         #? Entrée de population_size
         self.populationSizeEntry = ctk.CTkEntry(master = self, placeholder_text = "500", font= ("Helvetica", 20))
-        self.populationSizeEntry.place(relx=0.5, rely=0.8, anchor="center")
+        self.populationSizeEntry.place(relx=0.9, rely=0.3, anchor="center")
         self.populationSizeEntry.insert(0, str(population_size))  # Initialisation avec la valeur de population_size
 
         self.populationSizeEntryLabel = ctk.CTkLabel(master = self, text = "Population Size :", font= ("Helvetica", 20)) 
-        self.populationSizeEntryLabel.place(relx=0.5, rely=0.7, anchor="center")
+        self.populationSizeEntryLabel.place(relx=0.9, rely=0.2, anchor="center")
 
 
         #? ComboBox de countries
@@ -89,7 +89,7 @@ class MainFrame(ctk.CTkFrame):
 
         # Utilisation de ttk pour avoir une liste scrollable
         self.countryCombobox = ttk.Combobox(master=self, textvariable=self.countryVar, values=master.master.countries, state="readonly", font= ("Helvetica", 20))
-        self.countryCombobox.place(relx=0.5, rely=0.2, anchor="center")
+        self.countryCombobox.place(relx=0.5, rely=0.25, anchor="center")
         
         #? Combobox du nombre de routes
         self.nbRoutesVar = StringVar()
@@ -97,9 +97,9 @@ class MainFrame(ctk.CTkFrame):
         self.nbRoutesVar.set(str(nb_routes))  # Initialisation avec la valeur de nb_routes
 
         self.nbRoutesComboboxLabel = ctk.CTkLabel(master = self, text = "Number of routes drawn :", font= ("Helvetica", 20)) 
-        self.nbRoutesComboboxLabel.place(relx=0.5, rely=0.3, anchor="center")
+        self.nbRoutesComboboxLabel.place(relx=0.5, rely=0.6, anchor="center")
         self.nbRoutesCombobox = ctk.CTkOptionMenu(master=self, variable=self.nbRoutesVar, values=[str(i) for i in range(1, 6)], state="readonly", font= ("Helvetica", 20))
-        self.nbRoutesCombobox.place(relx=0.5, rely=0.4, anchor="center")
+        self.nbRoutesCombobox.place(relx=0.5, rely=0.7, anchor="center")
 
     #? Méthodes associées aux sliders 
     def nb_iterationsSlide(self, value):
@@ -145,8 +145,8 @@ class BottomFrame(ctk.CTkFrame):
     def __init__(self, master, to_main_window=None, **kwargs):
         super().__init__(master, **kwargs)
         self.start_btn = ctk.CTkButton(master=self, text="Run!", font=("Helvetica", 34),
-                                       fg_color="white", text_color="black",
+                                       fg_color="white", text_color="black", width= 200, height=100,
                                        border_width=2, border_color="black",
-                                       hover_color="lightgrey",
+                                       hover_color="deepskyblue",
                                        command=lambda: to_main_window(self.master.master.nb_iterations))
         self.start_btn.place(relx=0.5, rely=0.5, anchor="center")

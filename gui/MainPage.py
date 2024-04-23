@@ -4,13 +4,13 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 class MainPage(ctk.CTkFrame):
     def __init__(self, nb_iterations, master=None, **kwargs):
         super().__init__(master, **kwargs)
-        self.topMapFrame = TopMapFrame(master=self, fg_color="red", nb_iterations=nb_iterations)
+        self.topMapFrame = TopMapFrame(master=self, fg_color="indigo", nb_iterations=nb_iterations)
         self.topMapFrame.grid(row=0, column=0, columnspan=3, sticky="nsew")
-        self.mapFrame = MapFrame(master=self, fg_color="purple")
+        self.mapFrame = MapFrame(master=self, fg_color="white")
         self.mapFrame.grid(row=1, column=0)
-        self.statsFrame = StatsFrame(master=self, fg_color="green")
+        self.statsFrame = StatsFrame(master=self, fg_color="violet")
         self.statsFrame.grid(row=0, column=3, columnspan=3, sticky="nsew")
-        self.parametersFrame = ParametersFrame(master=self, fg_color="blue")
+        self.parametersFrame = ParametersFrame(master=self, fg_color="violet")
         self.parametersFrame.grid(row=1, column=3, columnspan=3, sticky="nsew")
 
         self.grid_rowconfigure(0, weight=1)
@@ -32,7 +32,7 @@ class TopMapFrame(ctk.CTkFrame):
         self.progress.set(0)
         self.nb_iterations = nb_iterations
 
-        self.progressLabel = ctk.CTkLabel(master=self, text="Itération 0/" + str(round(nb_iterations)), font=("Helvetica", 20))
+        self.progressLabel = ctk.CTkLabel(master=self, text="Itération 0/" + str(round(nb_iterations)), font=("Helvetica", 20), text_color = "LavenderBlush")
         self.progressLabel.place(relx=0.5, rely=0.35, anchor="center")
 
         self.stopLabel = ctk.CTkLabel(master=self, text="", font=("Helvetica", 20))
