@@ -31,7 +31,7 @@ class StartPage(ctk.CTkFrame):
 class TitleFrame(ctk.CTkFrame):
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
-        self.title = ctk.CTkLabel(master = self, text = "Entrée des paramètres", font= ("Helvetica", 34), text_color= "LavenderBlush")
+        self.title = ctk.CTkLabel(master = self, text = "Parameters input", font= ("Helvetica", 34), text_color= "LavenderBlush")
         self.title.place(relx=0.5, rely=0.5, anchor="center")
 
 class MainFrame(ctk.CTkFrame):
@@ -53,7 +53,7 @@ class MainFrame(ctk.CTkFrame):
                                               command=self.nb_iterationsSlide)
         self.iterationsSlider.place(relx=0.1, rely=0.3, anchor="center")
         self.iterationsSlider.set(nb_iterations)
-        self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "Nombre d'itérations : 500", font= ("Helvetica", 20))
+        self.iterationsSliderLabel = ctk.CTkLabel(master = self, text = "No. of iterations : 500", font= ("Helvetica", 20))
         self.iterationsSliderLabel.place(relx=0.1, rely=0.2, anchor="center")
 
         #? Slider du nombre de villes
@@ -61,7 +61,7 @@ class MainFrame(ctk.CTkFrame):
                                             command=self.nb_CitiesSlide)
         self.nbCitiesSlider.place(relx=0.1, rely=0.7, anchor="center")
         self.nbCitiesSlider.set(nb_cities)  
-        self.nbCitiesSliderLabel = ctk.CTkLabel(master = self, text = "Nombre de villes : 17", font= ("Helvetica", 20))
+        self.nbCitiesSliderLabel = ctk.CTkLabel(master = self, text = "No. of cities : 17", font= ("Helvetica", 20))
         self.nbCitiesSliderLabel.place(relx=0.1, rely=0.6, anchor="center")
         
 
@@ -96,18 +96,18 @@ class MainFrame(ctk.CTkFrame):
         self.nbRoutesVar.set("1")  # default value = 1
         self.nbRoutesVar.set(str(nb_routes))  # Initialisation avec la valeur de nb_routes
 
-        self.nbRoutesComboboxLabel = ctk.CTkLabel(master = self, text = "Number of routes drawn :", font= ("Helvetica", 20)) 
+        self.nbRoutesComboboxLabel = ctk.CTkLabel(master = self, text = "No. of routes drawn :", font= ("Helvetica", 20)) 
         self.nbRoutesComboboxLabel.place(relx=0.5, rely=0.6, anchor="center")
         self.nbRoutesCombobox = ctk.CTkOptionMenu(master=self, variable=self.nbRoutesVar, values=[str(i) for i in range(1, 6)], state="readonly", font= ("Helvetica", 20))
         self.nbRoutesCombobox.place(relx=0.5, rely=0.7, anchor="center")
 
     #? Méthodes associées aux sliders 
     def nb_iterationsSlide(self, value):
-        self.iterationsSliderLabel.configure(text="Nombre d'itérations : " + str(round(value)))
+        self.iterationsSliderLabel.configure(text="No. of iterations : " + str(round(value)))
         self.set_iterations(value)
 
     def nb_CitiesSlide(self, value):
-        self.nbCitiesSliderLabel.configure(text="Nombre de villes : " + str(round(value)))
+        self.nbCitiesSliderLabel.configure(text="No. of cities : " + str(round(value)))
         self.set_nbCities(value)
 
     #? Méthodes associées aux entries

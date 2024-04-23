@@ -71,8 +71,8 @@ class App(ctk.CTk):
         self.startPage.pack(fill="both", expand=True)
         self.startPage.mainFrame.iterationsSlider.set(self.nb_iterations)
         self.startPage.mainFrame.nbCitiesSlider.set(self.nb_cities)
-        self.startPage.mainFrame.iterationsSliderLabel.configure(text="Nombre d'itérations : " + str(self.nb_iterations))
-        self.startPage.mainFrame.nbCitiesSliderLabel.configure(text="Nombre de villes : " + str(self.nb_cities))
+        self.startPage.mainFrame.iterationsSliderLabel.configure(text="No. of iterations : " + str(self.nb_iterations))
+        self.startPage.mainFrame.nbCitiesSliderLabel.configure(text="No. of cities : " + str(self.nb_cities))
     
     def toMainWindow(self, nb_iterations):
         # Obtention des valeurs des paramètres
@@ -115,7 +115,7 @@ class App(ctk.CTk):
             nb_routes = nb_routes,
             stop_callback = self.mainPage.topMapFrame.setStopMessage 
         )
-        self.mainPage.parametersFrame.next_button()
+        self.mainPage.topMapFrame.next_button()
 
 
 app = App()
