@@ -5,9 +5,9 @@ class MainPage(ctk.CTkFrame):
     def __init__(self, nb_iterations, master=None, **kwargs):
         super().__init__(master, **kwargs)
         self.topMapFrame = TopMapFrame(master=self, fg_color="gray2", nb_iterations=nb_iterations)
-        self.topMapFrame.grid(row=0, column=0, columnspan=3, sticky="nsew")
+        self.topMapFrame.grid(row=0, column=0, columnspan=4, sticky="nsew")
         self.statsFrame = StatsFrame(master=self, fg_color="violet")
-        self.statsFrame.grid(row=0, column=3, columnspan=3, sticky="nsew")
+        self.statsFrame.grid(row=0, column=4, sticky="nsew")
         self.mapFrame = MapFrame(master=self, fg_color="gray94")
         self.mapFrame.grid(row=1, column=0, columnspan=5, sticky="nsew")
 
