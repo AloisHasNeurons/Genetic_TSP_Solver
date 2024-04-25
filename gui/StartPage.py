@@ -3,8 +3,8 @@ from tkinter import StringVar
 import tkinter.ttk as ttk
 class StartPage(ctk.CTkFrame):
     def __init__(self, master=None, to_main_window=None, set_iterations=None, set_nbCities=None, 
-                 update_stats=None, mutation_rate=0.05, population_size=500, country='France', 
-                 nb_routes=1, nb_iterations = 500, nb_cities = 17, **kwargs):
+                 update_stats=None, mutation_rate=0.005, population_size=700, country='France', 
+                 nb_routes=1, nb_iterations = 1000, nb_cities = 25, **kwargs):
         super().__init__(master, **kwargs)
 
         for i in range(5) :
@@ -35,8 +35,8 @@ class TitleFrame(ctk.CTkFrame):
         self.title.place(relx=0.5, rely=0.5, anchor="center")
 
 class MainFrame(ctk.CTkFrame):
-    def __init__(self, master, set_iterations=None, set_nbCities=None, update_stats=None, mutation_rate=0.05, 
-                 population_size=500, country='France', nb_routes=1, nb_iterations = 500, nb_cities = 17, **kwargs):
+    def __init__(self, master, set_iterations=None, set_nbCities=None, update_stats=None, mutation_rate=0.005, 
+                 population_size=700, country='France', nb_routes=1, nb_iterations = 1000, nb_cities = 25, **kwargs):
         self.set_iterations = set_iterations
         self.set_nbCities = set_nbCities
         self.update_stats = update_stats
@@ -120,7 +120,7 @@ class MainFrame(ctk.CTkFrame):
             else:
                 raise ValueError
         except ValueError:
-            return 0.05  # default value
+            return 0.005  # default value
 
     def get_population_size(self):
        try:
@@ -130,7 +130,7 @@ class MainFrame(ctk.CTkFrame):
            else:
                raise ValueError
        except ValueError:
-           return 500  # default value
+           return 700  # default value
 
     #? Méthodes associées aux Combobox
     def get_country(self):

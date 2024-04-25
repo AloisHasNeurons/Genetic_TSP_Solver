@@ -1,4 +1,5 @@
 # Genetic TSP Solver<!-- omit from toc -->
+![Gif of an execution with the maximum amount of cities in France](assets\France_max_running.gif "Gif of an execution with France, 36 cities, 0.005 mutation rate and 1 000 population size")
 
 - [Introduction](#introduction)
   - [About the Traveling Salesman Problem](#about-the-traveling-salesman-problem)
@@ -22,14 +23,15 @@ The TSP is an NP-hard problem.
 ## Features
 ### TSP Solver
 We are using a genetic algorithm to efficiently solve the TSP.
-![Screenshot of an execution](assets/France_example_screenshot.png "Screenshot of an execution with default parameters, except the number of cities (20)")
+![Screenshot of an execution](assets/France_example_screenshot.png "Screenshot of an execution with default parameters")
 
 ### Interactive GUI for real-time visualization
 A user interface in which the user is able to change the algorithm's parameters and to view a given number of smallest paths for each iteration. 
+![Gif of an execution](assets\Czechia_running.gif "Gif of an execution with Czechia, 25 cities, 0.005 mutation rate and 1 000 population size")
 
 ### Performance analysis at a glance
 Post-excution, the application displays a graph showing the evolution of average and best distance over the iterations.
-![Screenshot of the results of the execution](assets/France_results_screenshot.png "Screenshot of the results of previous execution")
+![Screenshot of the results of the default France execution](assets/France_results_screenshot.png "Screenshot of the results of the default France execution")
 
 ### Application to Real Cartographical Data
 We integrate real cartographical data from the [*Natural Earth*](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/) dataset using geopandas to accurately depict countries. The application also utilizes a `.csv` file with topographical data (Country, City name, Longitude, Latitude) to map cities accurately.
@@ -45,6 +47,7 @@ To ensure the application runs smoothly, install the following dependencies:
   
 ### Running the Application
 In order to use the application with the GUI, simply execute [`app.py`](gui/app.py) from the gui folder :
+
 **For Windows :** 
 ```
 python gui\app.py
@@ -56,6 +59,8 @@ python gui/app.py
 
 Otherwise, you can still use a legacy version without the GUI, in which you can't modify the parameters without modifying them directly in the code. 
 To do so, just run [`main.py`](genetic_algorithm/main.py) from the genetic_algorithm folder :
+
+**For Windows :** 
 ```
 python genetic_algorithm\main.py
 ```

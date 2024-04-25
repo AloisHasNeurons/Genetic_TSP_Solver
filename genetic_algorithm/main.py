@@ -49,7 +49,7 @@ def execute(nb_iterations, canvas, fig, gax, mutation_rate, population_size,
     # Formattage des donnéees pour correspondre au pays sélectionné
     city_list, data_city = dataProcessing(country, nb_cities)
     # Création d'une instance de l'algo avec les paramètres
-    algo = GeneticAlgorithm(mutation_rate = 0.04, population_size = 100, city_list = city_list, country = country, data_city = data_city)
+    algo = GeneticAlgorithm(mutation_rate=mutation_rate, population_size = population_size, city_list = city_list, country = country, data_city = data_city)
     #  Création des listes pour les graphiques de statistiques
     best_list = []
     average_list = []

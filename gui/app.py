@@ -22,12 +22,12 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         #! Initialisation des paramètres par défaut
-        self.mutation_rate = 0.05
-        self.population_size = 500
+        self.mutation_rate = 0.005
+        self.population_size = 700
         self.country = 'France'
         self.nb_routes = 1
-        self.nb_iterations = 500
-        self.nb_cities = 17
+        self.nb_iterations = 1000
+        self.nb_cities = 25
 
         self.title("Algo génétique")
         self.geometry("1400x1000")
