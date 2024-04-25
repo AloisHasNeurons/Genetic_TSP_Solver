@@ -1,7 +1,6 @@
 from .City import City
 from .GeneticAlgorithm import GeneticAlgorithm
 import os
-import numpy as np
 import pandas as pd
 import time
 # Pour l'affichage des cartes :

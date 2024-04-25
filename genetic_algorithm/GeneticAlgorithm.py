@@ -1,7 +1,6 @@
 from .Population import Population
 from .Route import Route
 import random
-import numpy as np
 import matplotlib.pyplot as plt
 import geopandas as gpd
 from matplotlib import image as mpimpg
