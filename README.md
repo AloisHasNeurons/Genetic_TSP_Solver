@@ -1,5 +1,5 @@
 # Genetic TSP Solver<!-- omit from toc -->
-![Gif of an execution with the maximum amount of cities in France](assets\France_max_running.gif "Gif of an execution with France, 36 cities, 0.005 mutation rate and 1 000 population size")
+![Gif of an execution with the maximum amount of cities in France](assets/France_max_running.gif "Gif of an execution with France, 36 cities, 0.005 mutation rate and 1 000 population size")
 
 - [Introduction](#introduction)
   - [About the Traveling Salesman Problem](#about-the-traveling-salesman-problem)
@@ -27,7 +27,7 @@ We are using a genetic algorithm to efficiently solve the TSP.
 
 ### Interactive GUI for real-time visualization
 A user interface in which the user is able to change the algorithm's parameters and to view a given number of smallest paths for each iteration. 
-![Gif of an execution](assets\Czechia_running.gif "Gif of an execution with Czechia, 25 cities, 0.005 mutation rate and 1 000 population size")
+![Gif of an execution](assets/Czechia_running.gif "Gif of an execution with Czechia, 25 cities, 0.005 mutation rate and 1 000 population size")
 
 ### Performance analysis at a glance
 Post-excution, the application displays a graph showing the evolution of average and best distance over the iterations.
