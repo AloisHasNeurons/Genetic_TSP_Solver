@@ -1,77 +1,97 @@
-# Genetic TSP Solver<!-- omit from toc -->
-![Gif of an execution with the maximum amount of cities in France](assets/France_max_running.gif "Gif of an execution with France, 36 cities, 0.005 mutation rate and 1 000 population size")
+# Genetic TSP Solver
 
-- [Introduction](#introduction)
-  - [About the Traveling Salesman Problem](#about-the-traveling-salesman-problem)
-- [Features](#features)
-  - [TSP Solver](#tsp-solver)
-  - [Interactive GUI for real-time visualization](#interactive-gui-for-real-time-visualization)
-  - [Performance analysis at a glance](#performance-analysis-at-a-glance)
-  - [Application to Real Cartographical Data](#application-to-real-cartographical-data)
-- [Installation](#installation)
-  - [Dependencies](#dependencies)
-  - [Running the Application](#running-the-application)
-- [Technologies used](#technologies-used)
+![Genetic TSP Solver Showcase](assets/France_max_running.gif)
 
-## Introduction 
-This is a genetic algorithm implementation in Python which aims to solve the Traveling Salesman Problem. 
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.9%2B-blue.svg" alt="Python Version">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
+</p>
 
-### About the Traveling Salesman Problem
-The *Traveling Salesman Problem* (TSP) is a well-known complexity problem which is about finding the shortest path to visit a given number of cities exactly one time, and then return to the first one. It can be modelised as a Hamiltonian circuit in graph theory. 
-The TSP is an NP-hard problem.
+## 🌟 Introduction
 
-## Features
-### TSP Solver
-We are using a genetic algorithm to efficiently solve the TSP.
-![Screenshot of an execution](assets/France_example_screenshot.png "Screenshot of an execution with default parameters")
+This project offers a Python-based solution to the classic **Traveling Salesman Problem (TSP)** using a genetic algorithm. It features an interactive GUI that allows you to visualize the algorithm's progress in real-time and analyze its performance.
 
-### Interactive GUI for real-time visualization
-A user interface in which the user is able to change the algorithm's parameters and to view a given number of smallest paths for each iteration. 
-![Gif of an execution](assets/Czechia_running.gif "Gif of an execution with Czechia, 25 cities, 0.005 mutation rate and 1 000 population size")
+The Traveling Salesman Problem is a famous NP-hard problem in computer science and operations research. The goal is to find the shortest possible route that visits a set of cities and returns to the origin city.
 
-### Performance analysis at a glance
-Post-excution, the application displays a graph showing the evolution of average and best distance over the iterations.
-![Screenshot of the results of the default France execution](assets/France_results_screenshot.png "Screenshot of the results of the default France execution")
+## ✨ Features
 
-### Application to Real Cartographical Data
-We integrate real cartographical data from the [*Natural Earth*](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/) dataset using geopandas to accurately depict countries. The application also utilizes a `.csv` file with topographical data (Country, City name, Longitude, Latitude) to map cities accurately.
+*   **Efficient TSP Solver:** Utilizes a genetic algorithm to find near-optimal solutions to the TSP.
+*   **Interactive GUI:** A user-friendly interface built with `customtkinter` to control the algorithm's parameters and visualize the results.
+*   **Real-time Visualization:** Watch the algorithm find the best route on a map with `geopandas` and `matplotlib`.
+*   **Performance Analysis:** View graphs that show the evolution of the best and average route distances over generations.
+*   **Real-world Data:** Uses real cartographical data from [Natural Earth](https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/) and city data to create realistic TSP scenarios.
 
-## Installation 
-### Dependencies
-To ensure the application runs smoothly, install the following dependencies:
-- pandas
-- geopandas
-- matplotlib
-- shapely
-- customtkinter
-  
-### Running the Application
-In order to use the application with the GUI, simply execute [`app.py`](gui/app.py) from the gui folder :
+<details>
+<summary>Click to see the screenshots</summary>
 
-**For Windows :** 
-```
-python gui\app.py
-```
-**For Unix :**
-```
-python gui/app.py
-```
+| Screenshot |
+|:---:|
+| ![Screenshot of an execution](assets/France_example_screenshot.png "Screenshot of an execution with default parameters") |
+| *Execution with default parameters* |
+| ![Gif of an execution](assets/Czechia_running.gif "Gif of an execution with Czechia, 25 cities, 0.005 mutation rate and 1 000 population size") |
+| *Execution with Czechia, 25 cities, 0.005 mutation rate and 1 000 population size* |
+| ![Screenshot of the results of the default France execution](assets/France_results_screenshot.png "Screenshot of the results of the default France execution") |
+| *Results of the default France execution* |
 
-Otherwise, you can still use a legacy version without the GUI, in which you can't modify the parameters without modifying them directly in the code. 
-To do so, just run [`main.py`](genetic_algorithm/main.py) from the genetic_algorithm folder :
+</details>
 
-**For Windows :** 
-```
-python genetic_algorithm\main.py
-```
-**For Unix :**
-```
-python genetic_algorithm/main.py
-```
+## 🚀 Getting Started
 
-## Technologies used
-- Python
-- customtkinter
-- geopandas
-- matplotlib
+### Prerequisites
 
+Before you begin, ensure you have Python 3.9 or later installed on your system.
+
+### Installation
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/AloisHasNeurons/Genetic_TSP_Solver.git
+    cd Genetic_TSP_Solver
+    ```
+
+2.  **Create and activate a virtual environment:**
+
+    *   **Using `venv`:**
+        ```bash
+        python -m venv .venv
+        source .venv/bin/activate
+        ```
+
+    *   **Using `conda`:**
+        ```bash
+        conda create --name tsp_solver python=3.9
+        conda activate tsp_solver
+        ```
+
+3.  **Install the dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+### Usage
+
+*   **GUI Mode:**
+    To run the application with the graphical user interface, execute the following command:
+    ```bash
+    python gui/app.py
+    ```
+
+*   **Command-line Mode:**
+    To run the application without the GUI, you can execute the `main.py` script:
+    ```bash
+    python genetic_algorithm/main.py
+    ```
+
+## 🛠️ Technologies Used
+
+*   [Python](https://www.python.org/)
+*   [customtkinter](https://github.com/TomSchimansky/CustomTkinter)
+*   [geopandas](https://geopandas.org/)
+*   [matplotlib](https://matplotlib.org/)
+*   [pandas](https://pandas.pydata.org/)
+*   [shapely](https://shapely.readthedocs.io/en/stable/manual.html)
+
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
